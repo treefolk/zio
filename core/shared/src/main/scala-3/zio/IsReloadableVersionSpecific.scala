@@ -147,7 +147,7 @@ private object IsReloadableMacros {
       }
 
     val trace = '{ summon[Trace] }.asTerm
-    val body = cls.declarations.flatMap { member =>
+    val body  = cls.declarations.flatMap { member =>
       typeAndParams(member).flatMap { (tpt, typeParams, termParamss) =>
         val body =
           service.asTerm

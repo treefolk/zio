@@ -32,11 +32,11 @@ trait ConsoleRenderer extends TestRenderer {
     trace: Trace
   ): Seq[ExecutionResult] =
     event match {
-      case _: TestStarted => Nil
+      case _: TestStarted                     => Nil
       case SectionStart(labelsReversed, _, _) =>
         val depth = labelsReversed.length - 1
         labelsReversed.reverse match {
-          case Nil => Seq.empty
+          case Nil          => Seq.empty
           case nonEmptyList =>
             Seq(
               ExecutionResult.withoutSummarySpecificOutput(
@@ -53,8 +53,8 @@ trait ConsoleRenderer extends TestRenderer {
         }
 
       case Test(labelsReversed, results, annotations, _, _, _, _) =>
-        val labels       = labelsReversed.reverse
-        val initialDepth = labels.length - 1
+        val labels                           = labelsReversed.reverse
+        val initialDepth                     = labels.length - 1
         val (streamingOutput, summaryOutput) =
           testCaseOutput(labels, results, includeCause, annotations)
 
@@ -63,7 +63,7 @@ trait ConsoleRenderer extends TestRenderer {
             ResultType.Test,
             labels.headOption.getOrElse(""),
             results match {
-              case Left(_) => Status.Failed
+              case Left(_)                   => Status.Failed
               case Right(value: TestSuccess) =>
                 value match {
                   case TestSuccess.Succeeded(_) => Status.Passed
@@ -134,7 +134,7 @@ trait ConsoleRenderer extends TestRenderer {
     results.map { result =>
       val testOutput: List[ConsoleIO] = result.annotations.flatMap(_.get(TestAnnotation.output))
       val renderedAnnotations         = renderAnnotations(result.annotations, testAnnotationRenderer)
-      val message = (Message(result.summaryLines) ++ renderedAnnotations ++ renderOutput(testOutput))
+      val message                     = (Message(result.summaryLines) ++ renderedAnnotations ++ renderOutput(testOutput))
         .intersperse(Line.fromString("\n"))
 
       val output = result.resultType match {
@@ -162,8 +162,8 @@ trait ConsoleRenderer extends TestRenderer {
 
   private def renderSuite(status: Status, offset: Int, message: Message): Message =
     status match {
-      case Status.Passed => withOffset(offset)(info("+") + sp) +: message
-      case Status.Failed => withOffset(offset)(Line.empty) +: message
+      case Status.Passed  => withOffset(offset)(info("+") + sp) +: message
+      case Status.Failed  => withOffset(offset)(Line.empty) +: message
       case Status.Ignored =>
         withOffset(offset)(Line.empty) +: message :+ fr(" - " + TestAnnotation.ignored.identifier + " suite").toLine
     }

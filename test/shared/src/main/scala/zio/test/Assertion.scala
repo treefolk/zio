@@ -54,7 +54,7 @@ object Assertion extends AssertionVariants {
   )(
     assertion: Assertion[A]
   )(implicit sourceLocation: SourceLocation): TestResult = {
-    lazy val value0 = expr
+    lazy val value0    = expr
     val completeString =
       codeString.flatMap(code =>
         assertionString.map { assertion =>
@@ -280,7 +280,7 @@ object Assertion extends AssertionVariants {
     @scala.annotation.tailrec
     def loop(iterator: Iterator[A]): Boolean = iterator.hasNext match {
       case false => true
-      case true =>
+      case true  =>
         val x = iterator.next()
         if (iterator.hasNext) {
           val y = iterator.next()
@@ -796,7 +796,7 @@ object Assertion extends AssertionVariants {
     @scala.annotation.tailrec
     def loop(iterator: Iterator[Any], seen: Set[Any]): Boolean = iterator.hasNext match {
       case false => true
-      case true =>
+      case true  =>
         val x = iterator.next()
         if (seen.contains(x)) false else loop(iterator, seen + x)
     }

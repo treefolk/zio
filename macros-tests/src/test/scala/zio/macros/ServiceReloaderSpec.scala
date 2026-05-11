@@ -26,7 +26,7 @@ object ServiceReloaderSpec extends ZIOSpecDefault {
     test("reload") {
       trait Foo { def foo: UIO[Int] }
       for {
-        ref <- Ref.make(0)
+        ref               <- Ref.make(0)
         layer: ULayer[Foo] = ZLayer {
                                for {
                                  i <- ref.updateAndGet(_ + 1)

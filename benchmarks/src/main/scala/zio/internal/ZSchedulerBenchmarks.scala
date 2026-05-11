@@ -145,7 +145,7 @@ class ZSchedulerBenchmarks {
     val io = for {
       deferred <- CIO.deferred[Unit]
       ref      <- CIO.ref(200)
-      effect =
+      effect    =
         catsRepeat(1000)(CIO.cede) *> ref.modify(n => (n - 1, if (n == 1) deferred.complete(()) else CIO.unit)).flatten
       _ <- catsRepeat(200)(effect.start)
       _ <- deferred.get
@@ -208,7 +208,7 @@ class ZSchedulerBenchmarks {
     val io = for {
       promise <- Promise.make[Nothing, Unit]
       ref     <- Ref.make(200)
-      effect =
+      effect   =
         repeat(1000)(ZIO.yieldNow) *> ref.modify(n => (if (n == 1) promise.succeed(()) else ZIO.unit, n - 1)).flatten
       _ <- repeat(200)(effect.forkDaemon)
       _ <- promise.await

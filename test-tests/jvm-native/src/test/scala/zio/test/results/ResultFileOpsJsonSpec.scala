@@ -50,7 +50,7 @@ object ResultFileOpsJsonSpec extends ZIOBaseSpec {
     ZIO.scoped(for {
       path   <- ZIO.attemptBlocking(java.nio.file.Files.createTempFile("zio-test", ".json"))
       writer <- ResultFileOps.Json(path.toString)
-      _ <-
+      _      <-
         if (parallel) ZIO.foreachParDiscard(content)(writer.write(_))
         else ZIO.foreachDiscard(content)(writer.write(_))
     } yield path)

@@ -36,7 +36,7 @@ private[zio] object FastList {
     new ListModule {
       type List[+A] = Any
 
-      def empty[A]: List[A] = null
+      def empty[A]: List[A]                   = null
       def cons[A](a: A, as: List[A]): List[A] =
         as match {
           case null => a

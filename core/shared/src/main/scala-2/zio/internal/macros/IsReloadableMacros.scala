@@ -52,7 +52,7 @@ class IsReloadableMacros(val c: blackbox.Context) {
       .map { sym =>
         val m       = sym.asMethod.typeSignatureIn(resultType)
         val tparams = m.typeParams.map(c.internal.typeDef)
-        val params = m.paramLists.map(
+        val params  = m.paramLists.map(
           _.map { p =>
             val mods = if (p.isImplicit) Modifiers(Flag.IMPLICIT) else Modifiers()
             val tpe  = TypeTree(p.typeSignatureIn(m))

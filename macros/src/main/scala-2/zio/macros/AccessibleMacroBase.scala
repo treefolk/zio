@@ -124,8 +124,8 @@ private[macros] abstract class AccessibleMacroBase(val c: whitebox.Context) {
     private def typeInfo(tree: Tree): TypeInfo =
       (tree: @unchecked) match {
         case tq"$_[..$typeParams]" =>
-          val tpe       = treeTpe(tree)
-          val dealiased = tpe.dealias
+          val tpe                      = treeTpe(tree)
+          val dealiased                = tpe.dealias
           val replacements: List[Tree] =
             (tpe.typeArgs zip typeParams).collect { case (NoType, t) => q"$t" }
 
@@ -135,8 +135,8 @@ private[macros] abstract class AccessibleMacroBase(val c: whitebox.Context) {
           }
 
           (dealiased.typeSymbol.fullName, typeArgTrees) match {
-            case ("zio.ZIO", r :: e :: a :: Nil)              => TypeInfo(Capability.Effect(r, e, a))
-            case ("zio.managed.ZManaged", r :: e :: a :: Nil) => TypeInfo(Capability.Managed(r, e, a))
+            case ("zio.ZIO", r :: e :: a :: Nil)                    => TypeInfo(Capability.Effect(r, e, a))
+            case ("zio.managed.ZManaged", r :: e :: a :: Nil)       => TypeInfo(Capability.Managed(r, e, a))
             case ("zio.stream.ZSink", r :: e :: a :: l :: b :: Nil) =>
               TypeInfo(Capability.Sink(r, e, a, l, b))
             case ("zio.stream.ZStream", r :: e :: a :: Nil) => TypeInfo(Capability.Stream(r, e, a))

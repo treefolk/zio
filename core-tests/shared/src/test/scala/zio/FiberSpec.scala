@@ -13,7 +13,7 @@ object FiberSpec extends ZIOBaseSpec {
     suite("FiberSpec")(
       suite("Create a new Fiber and")(test("scope it") {
         for {
-          ref <- Ref.make(false)
+          ref   <- Ref.make(false)
           fiber <-
             withLatch(release => ZIO.acquireReleaseWith(release *> ZIO.unit)(_ => ref.set(true))(_ => ZIO.never).fork)
           _     <- ZIO.scoped(fiber.scoped)
@@ -113,8 +113,8 @@ object FiberSpec extends ZIOBaseSpec {
       suite("track blockingOn")(
         test("in await") {
           for {
-            f1 <- ZIO.never.fork
-            f2 <- f1.await.fork
+            f1         <- ZIO.never.fork
+            f2         <- f1.await.fork
             blockingOn <- f2.status
                             .collect(()) { case Fiber.Status.Suspended(_, _, blockingOn) =>
                               blockingOn
@@ -124,7 +124,7 @@ object FiberSpec extends ZIOBaseSpec {
         },
         test("in race") {
           for {
-            f <- ZIO.infinity.race(ZIO.infinity).fork
+            f          <- ZIO.infinity.race(ZIO.infinity).fork
             blockingOn <- f.status
                             .collect(()) { case Fiber.Status.Suspended(_, _, blockingOn) =>
                               blockingOn

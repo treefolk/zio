@@ -48,7 +48,7 @@ object ChunkBuilder {
     new ChunkBuilder[A] {
       var arrayBuilder: ArrayBuilder[A] = null
       var size: SInt                    = -1
-      def addOne(a: A): this.type = {
+      def addOne(a: A): this.type       = {
         if (arrayBuilder eq null) {
           implicit val tag = Chunk.Tags.fromValue(a)
           arrayBuilder = ArrayBuilder.make

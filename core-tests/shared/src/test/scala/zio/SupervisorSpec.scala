@@ -65,7 +65,7 @@ object SupervisorSpec extends ZIOBaseSpec {
     suite("adding as layer")(
       test("supervisor is added via layer") {
         val testSupervisor = new MyCustomSupervisor
-        val test = for {
+        val test           = for {
           supervisor    <- FiberRef.currentSupervisor.get
           supervisorSet <- ZIO.succeed(Supervisor.allSupervisors(supervisor))
         } yield {
@@ -79,7 +79,7 @@ object SupervisorSpec extends ZIOBaseSpec {
         val baseLayer      = ZLayer.succeed(1) ++ Runtime.addSupervisor(testSupervisor)
         val layerA         = ZLayer.fromFunction((i: Int) => s"Layer $i")
         val layerB         = ZLayer.fromFunction((i: Int) => i.toLong)
-        val test = for {
+        val test           = for {
           _             <- ZIO.service[Long]
           _             <- ZIO.service[String]
           supervisor    <- FiberRef.currentSupervisor.get

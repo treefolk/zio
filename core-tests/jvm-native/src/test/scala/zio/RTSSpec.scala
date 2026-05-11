@@ -48,7 +48,7 @@ object RTSSpec extends ZIOBaseSpec {
         for {
           release <- Promise.make[Nothing, Int]
           latch   <- Promise.make[Nothing, Unit]
-          async = ZIO.asyncInterruptUnsafe[Any, Nothing, Unit] { implicit unsafe => _ =>
+          async    = ZIO.asyncInterruptUnsafe[Any, Nothing, Unit] { implicit unsafe => _ =>
                     latch.unsafe.done(ZIO.unit); Left(release.succeed(42).unit)
                   }
           fiber  <- async.fork
@@ -79,8 +79,8 @@ object RTSSpec extends ZIOBaseSpec {
     test("interruption of unending acquireReleaseWith") {
       val io =
         for {
-          startLatch <- Promise.make[Nothing, Int]
-          exitLatch  <- Promise.make[Nothing, Int]
+          startLatch    <- Promise.make[Nothing, Int]
+          exitLatch     <- Promise.make[Nothing, Int]
           acquireRelease = ZIO.acquireReleaseExitWith(ZIO.succeed(21))((r: Int, exit: Exit[Any, Any]) =>
                              if (exit.isInterrupted) exitLatch.succeed(r)
                              else ZIO.die(new Error("Unexpected case"))

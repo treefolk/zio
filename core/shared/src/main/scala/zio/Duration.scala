@@ -152,8 +152,8 @@ final class DurationOps(private val duration: Duration) extends AnyVal {
   def render: String = {
     val nanos = duration.toNanos
     TimeUnit.NANOSECONDS.toMillis(nanos) match {
-      case 0                       => s"$nanos ns"
-      case millis if millis < 1000 => s"$millis ms"
+      case 0                        => s"$nanos ns"
+      case millis if millis < 1000  => s"$millis ms"
       case millis if millis < 60000 =>
         val maybeMs = Option(millis % 1000).filterNot(_ == 0)
         s"${millis / 1000} s${maybeMs.fold("")(ms => s" $ms ms")}"

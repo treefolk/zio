@@ -55,10 +55,10 @@ final case class Metrics private[zio] (metrics: Set[MetricPair.Untyped]) {
       keyValues.map(p => s"(${p._1} -> ${p._2})").mkString(", ")
 
     metric.metricState match {
-      case MetricState.Counter(count) => s"Counter[$count]"
+      case MetricState.Counter(count)         => s"Counter[$count]"
       case MetricState.Frequency(occurrences) =>
         s"Frequency[${renderKeyValues(occurrences)}]"
-      case MetricState.Gauge(value) => s"Gauge[$value]"
+      case MetricState.Gauge(value)                             => s"Gauge[$value]"
       case MetricState.Histogram(buckets, count, min, max, sum) =>
         s"Histogram[buckets: [${renderKeyValues(buckets)}], count: [$count], min: [$min], max: [$max], sum: [$sum]]"
       case MetricState.Summary(_, quantiles, count, min, max, sum) =>

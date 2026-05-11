@@ -20,7 +20,7 @@ object ZIOSpecAbstractSpec extends ZIOBaseSpec {
       // We must define this here rather than as a standalone spec, because it will prevent all the tests from running
       val specWithBrokenLayer = new ZIOSpec[Int] {
         override val bootstrap = ZLayer.fromZIO(ZIO.attempt(???))
-        override def spec =
+        override def spec      =
           test("should never see this label printed") {
             assertTrue(true)
           }
@@ -54,7 +54,7 @@ object ZIOSpecAbstractSpec extends ZIOBaseSpec {
       // We must define this here rather than as a standalone spec, because it will prevent all the tests from running
       val specWithBrokenLayer = new ZIOSpec[Int] {
         override val bootstrap = ZLayer.fromZIO(ZIO.attempt(???))
-        override def spec =
+        override def spec      =
           test("should never see this label printed") {
             assertTrue(true)
           }
@@ -90,8 +90,8 @@ object ZIOSpecAbstractSpec extends ZIOBaseSpec {
       } yield assertTrue(equalsTimeLess(res, Summary(1, 0, 0, "")))
     ),
     test("runSpec produces a summary with fully-qualified failures") {
-      val suiteName = "parent"
-      val testName  = "failing test"
+      val suiteName                   = "parent"
+      val testName                    = "failing test"
       val failingSpec: ZIOSpecDefault = new ZIOSpecDefault {
         override def spec = suite(suiteName)(
           test(testName)(

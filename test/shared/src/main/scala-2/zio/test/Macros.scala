@@ -54,7 +54,7 @@ private[test] object Macros {
     // from https://github.com/com-lihaoyi/sourcecode
     def text[T: c.WeakTypeTag](tree: c.Tree): (Int, Int, String) = {
       val fileContent = new String(tree.pos.source.content)
-      var start = tree.collect { case treeVal =>
+      var start       = tree.collect { case treeVal =>
         treeVal.pos match {
           case NoPosition => Int.MaxValue
           case p          => p.start

@@ -19,7 +19,7 @@ object ReentrantLockSpec extends ZIOSpecDefault {
       test("2 locks") {
         ZIO.scoped {
           for {
-            lock <- ReentrantLock.make()
+            lock  <- ReentrantLock.make()
             count <-
               lock.withLock.flatMap(_ => lock.withLock.flatMap(ZIO.succeed(_)))
           } yield assert(count)(equalTo(2))
@@ -45,12 +45,12 @@ object ReentrantLockSpec extends ZIOSpecDefault {
           wlatch  <- Promise.make[Nothing, Unit]
           wlatch2 <- Promise.make[Nothing, Unit]
           ref     <- Ref.make(0)
-          _ <- ZIO
+          _       <- ZIO
                  .scoped(
                    lock.withLock.flatMap(_ => mlatch.succeed(())) *> wlatch.await
                  )
                  .fork
-          _ <- mlatch.await
+          _  <- mlatch.await
           f1 <- (latch1.countDown *> ZIO.scoped(
                   lock.withLock.flatMap(_ => ref.update(_ + 10))
                 )).fork

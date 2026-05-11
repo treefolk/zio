@@ -29,10 +29,10 @@ private[compression] class Gzipper(
   strategy: CompressionStrategy,
   flushMode: FlushMode
 ) {
-  private val crc             = new CRC32()
-  private val buffer          = new Array[Byte](bufferSize)
-  private var headerSent      = false
-  private var inputSize: Long = 0
+  private val crc                = new CRC32()
+  private val buffer             = new Array[Byte](bufferSize)
+  private var headerSent         = false
+  private var inputSize: Long    = 0
   private val deflater: Deflater = {
     val deflater = new Deflater(level.jValue, true)
     deflater.setStrategy(strategy.jValue)

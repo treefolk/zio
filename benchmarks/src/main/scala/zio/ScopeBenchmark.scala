@@ -23,7 +23,7 @@ class ScopeBenchmark {
   @Benchmark
   def closeBenchmark(): Unit = {
     val scope = makeScope
-    val f = nFinalizers match {
+    val f     = nFinalizers match {
       case 0 => scope.close(Exit.unit)
       case 1 => scope.addFinalizer(ZIO.unit) *> scope.close(Exit.unit)
       case n => scope.addFinalizer(ZIO.unit).repeatN(n - 1) *> scope.close(Exit.unit)

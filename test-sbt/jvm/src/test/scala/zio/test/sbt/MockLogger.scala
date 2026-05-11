@@ -6,7 +6,7 @@ import zio.test.sbt.TestingSupport._
 import java.util.concurrent.atomic.AtomicReference
 
 class MockLogger extends Logger {
-  private val logged = new AtomicReference(Vector.empty[String])
+  private val logged           = new AtomicReference(Vector.empty[String])
   private def log(str: String) = {
     logged.getAndUpdate(_ :+ str)
     ()

@@ -88,8 +88,8 @@ object Summary {
 
     final def <>(that: Interval): Interval =
       (self, that) match {
-        case (self, Interval.Empty) => self
-        case (Interval.Empty, that) => that
+        case (self, Interval.Empty)                                         => self
+        case (Interval.Empty, that)                                         => that
         case (Interval.Finite(start1, end1), Interval.Finite(start2, end2)) =>
           val start = if (start1.isBefore(start2)) start1 else start2
           val end   = if (end1.isAfter(end2)) end1 else end2

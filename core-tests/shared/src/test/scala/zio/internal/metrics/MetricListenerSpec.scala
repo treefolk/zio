@@ -68,7 +68,7 @@ object MetricListenerSpec extends ZIOBaseSpec {
               listenerPromise <- Promise.make[Nothing, (MetricKey[MetricKeyType.Histogram], Double)]
               runtime         <- ZIO.runtime[Any]
               listener         = HistogramListener(listenerPromise, runtime)
-              _ <- ZIO.acquireRelease(ZIO.succeed(MetricClient.addListener(listener)))(_ =>
+              _               <- ZIO.acquireRelease(ZIO.succeed(MetricClient.addListener(listener)))(_ =>
                      ZIO.succeed(MetricClient.removeListener(listener))
                    )
               metric       = Metric.histogram("test", Boundaries(Chunk.empty))
@@ -100,7 +100,7 @@ object MetricListenerSpec extends ZIOBaseSpec {
               listenerRef <- Ref.make(0.0)
               runtime     <- ZIO.runtime[Any]
               listener     = GaugeListener(listenerRef, runtime)
-              _ <- ZIO.acquireRelease(ZIO.succeed(MetricClient.addListener(listener)))(_ =>
+              _           <- ZIO.acquireRelease(ZIO.succeed(MetricClient.addListener(listener)))(_ =>
                      ZIO.succeed(MetricClient.removeListener(listener))
                    )
               metric = Metric.gauge("test")

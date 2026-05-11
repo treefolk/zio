@@ -462,7 +462,7 @@ sealed abstract class ZManaged[-R, +E, +A] extends ZManagedVersionSpecific[R, E,
   def memoize(implicit trace: Trace): ZManaged[Any, Nothing, ZManaged[R, E, A]] =
     ZManaged.releaseMap.mapZIO { finalizers =>
       for {
-        promise <- Promise.make[E, A]
+        promise  <- Promise.make[E, A]
         complete <- ZManaged.currentReleaseMap
                       .locally(finalizers)(self.zio)
                       .map(_._2)
@@ -543,18 +543,17 @@ sealed abstract class ZManaged[-R, +E, +A] extends ZManagedVersionSpecific[R, E,
           r1              <- ZIO.environment[R1]
           outerReleaseMap <- ZManaged.currentReleaseMap.get
           innerReleaseMap <- ReleaseMap.make
-          exitEA <- ZManaged.currentReleaseMap.locally(innerReleaseMap)(
+          exitEA          <- ZManaged.currentReleaseMap.locally(innerReleaseMap)(
                       restore(zio).exit.map(_.mapExit((t: (ZManaged.Finalizer, A)) => t._2))
                     )
-          releaseMapEntry <- outerReleaseMap.add { e =>
-                               cleanup(exitEA)
-                                 .provideEnvironment(r1)
-                                 .exit
-                                 .zipWith(innerReleaseMap.releaseAll(e, ExecutionStrategy.Sequential).exit)((l, r) =>
-                                   l *> r
-                                 )
-                                 .flatten
-                             }
+          releaseMapEntry <-
+            outerReleaseMap.add { e =>
+              cleanup(exitEA)
+                .provideEnvironment(r1)
+                .exit
+                .zipWith(innerReleaseMap.releaseAll(e, ExecutionStrategy.Sequential).exit)((l, r) => l *> r)
+                .flatten
+            }
           a <- exitEA
         } yield (releaseMapEntry, a)
       }
@@ -636,8 +635,8 @@ sealed abstract class ZManaged[-R, +E, +A] extends ZManagedVersionSpecific[R, E,
   def preallocate(implicit trace: Trace): ZIO[R, E, Managed[Nothing, A]] =
     ZIO.uninterruptibleMask { restore =>
       for {
-        releaseMap <- ReleaseMap.make
-        tp         <- restore(ZManaged.currentReleaseMap.locally(releaseMap)(self.zio)).exit
+        releaseMap   <- ReleaseMap.make
+        tp           <- restore(ZManaged.currentReleaseMap.locally(releaseMap)(self.zio)).exit
         preallocated <- tp.foldExitZIO(
                           c =>
                             releaseMap
@@ -979,7 +978,7 @@ sealed abstract class ZManaged[-R, +E, +A] extends ZManagedVersionSpecific[R, E,
           outerReleaseMap <- ZManaged.currentReleaseMap.get
           innerReleaseMap <- ZManaged.ReleaseMap.make
           earlyRelease    <- outerReleaseMap.add(innerReleaseMap.releaseAll(_, ExecutionStrategy.Sequential))
-          raceResult <- restore {
+          raceResult      <- restore {
                           ZManaged.currentReleaseMap
                             .locally(innerReleaseMap)(zio)
                             .raceWith(ZIO.sleep(d).as(None))(
@@ -989,7 +988,7 @@ sealed abstract class ZManaged[-R, +E, +A] extends ZManagedVersionSpecific[R, E,
                         }
           a <- raceResult match {
                  case Right(value) => ZIO.succeed(Some(value))
-                 case Left(fiber) =>
+                 case Left(fiber)  =>
                    ZIO.fiberIdWith { id =>
                      fiber.interrupt
                        .ensuring(innerReleaseMap.releaseAll(Exit.interrupt(id), ExecutionStrategy.Sequential))
@@ -1506,7 +1505,7 @@ object ZManaged extends ZManagedPlatformSpecific {
 
           def release(key: Key, exit: Exit[Any, Any])(implicit trace: Trace): UIO[Any] =
             ref.modify {
-              case s @ Exited(_, _, _) => (ZIO.unit, s)
+              case s @ Exited(_, _, _)          => (ZIO.unit, s)
               case s @ Running(_, fins, update) =>
                 (
                   fins.get(key).fold(ZIO.unit: UIO[Any])(fin => update(fin)(exit)),
@@ -1516,7 +1515,7 @@ object ZManaged extends ZManagedPlatformSpecific {
 
           def releaseAll(exit: Exit[Any, Any], execStrategy: ExecutionStrategy)(implicit trace: Trace): UIO[Any] =
             ref.modify {
-              case s @ Exited(_, _, _) => (ZIO.unit, s)
+              case s @ Exited(_, _, _)            => (ZIO.unit, s)
               case Running(nextKey, fins, update) =>
                 execStrategy match {
                   case ExecutionStrategy.Sequential =>
@@ -1561,7 +1560,7 @@ object ZManaged extends ZManagedPlatformSpecific {
 
           def replace(key: Key, finalizer: Finalizer)(implicit trace: Trace): UIO[Option[Finalizer]] =
             ref.modify {
-              case Exited(nk, exit, update) => (finalizer(exit).as(None), Exited(nk, exit, update))
+              case Exited(nk, exit, update)  => (finalizer(exit).as(None), Exited(nk, exit, update))
               case Running(nk, fins, update) =>
                 (ZIO.succeed(fins get key), Running(nk, fins.updated(key, finalizer), update))
             }.flatten
@@ -2108,10 +2107,10 @@ object ZManaged extends ZManagedPlatformSpecific {
     ZManaged {
       ZIO.uninterruptibleMask { restore =>
         for {
-          r          <- ZIO.environment[R]
-          releaseMap <- ZManaged.currentReleaseMap.get
-          reserved   <- reservation
-          releaseKey <- releaseMap.addIfOpen(reserved.release(_).provideEnvironment(r))
+          r             <- ZIO.environment[R]
+          releaseMap    <- ZManaged.currentReleaseMap.get
+          reserved      <- reservation
+          releaseKey    <- releaseMap.addIfOpen(reserved.release(_).provideEnvironment(r))
           finalizerAndA <- releaseKey match {
                              case Some(key) =>
                                restore(reserved.acquire)
@@ -2363,7 +2362,7 @@ object ZManaged extends ZManagedPlatformSpecific {
       ref.modify { map =>
         map.get(a) match {
           case Some(promise) => (promise.await, map)
-          case None =>
+          case None          =>
             val promise = Promise.unsafe.make[E, B](fiberId)(Unsafe.unsafe)
             (scope(f(a)).map(_._2).intoPromise(promise) *> promise.await, map.updated(a, promise))
         }
@@ -2633,7 +2632,7 @@ object ZManaged extends ZManagedPlatformSpecific {
   def switchable[R, E, A](implicit trace: Trace): ZManaged[R, Nothing, ZManaged[R, E, A] => ZIO[R, E, A]] =
     for {
       releaseMap <- ZManaged.releaseMap
-      key <- releaseMap
+      key        <- releaseMap
                .addIfOpen(_ => ZIO.unit)
                .flatMap {
                  case Some(key) => ZIO.succeed(key)
@@ -2649,7 +2648,7 @@ object ZManaged extends ZManagedPlatformSpecific {
                      r     <- ZIO.environment[R]
                      inner <- ReleaseMap.make
                      a     <- restore(ZManaged.currentReleaseMap.locally(inner)(newResource.zio))
-                     _ <- releaseMap
+                     _     <- releaseMap
                             .replace(key, inner.releaseAll(_, ExecutionStrategy.Sequential))
                    } yield a._2
                  }

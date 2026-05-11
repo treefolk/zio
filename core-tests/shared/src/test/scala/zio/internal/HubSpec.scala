@@ -340,7 +340,7 @@ object HubSpec extends ZIOBaseSpec {
           subscriber2 <- takeN(subscription2, as.length).fork
           fiber1      <- ZIO.foreach(1 to 100)(_ => ZIO.succeed(subscription1.isEmpty())).map(_.forall(a => !a)).fork
           fiber2      <- ZIO.foreach(1 to 100)(_ => ZIO.succeed(subscription2.isEmpty())).map(_.forall(a => !a)).fork
-          _ <- ZIO
+          _           <- ZIO
                  .succeed(hub.subscribe())
                  .flatMap(subscription => ZIO.yieldNow *> ZIO.succeed(subscription.unsubscribe()))
           _       <- publisher1.join
@@ -365,7 +365,7 @@ object HubSpec extends ZIOBaseSpec {
           subscriber1 <- takeN(subscription1, as.length).fork
           subscriber2 <- takeN(subscription2, as.length).fork
           fiber       <- ZIO.foreach(1 to 100)(_ => ZIO.succeed(hub.isFull())).map(_.forall(a => !a)).fork
-          _ <- ZIO
+          _           <- ZIO
                  .succeed(hub.subscribe())
                  .flatMap(subscription => ZIO.yieldNow *> ZIO.succeed(subscription.unsubscribe()))
           _      <- publisher1.join
@@ -388,7 +388,7 @@ object HubSpec extends ZIOBaseSpec {
           publisher2  <- offerAll_(hub, as.map(-_)).fork
           subscriber1 <- takeN(subscription1, as.length).fork
           subscriber2 <- takeN(subscription2, as.length).fork
-          _ <- ZIO
+          _           <- ZIO
                  .succeed(hub.subscribe())
                  .flatMap(subscription => ZIO.yieldNow *> ZIO.succeed(subscription.unsubscribe()))
           _ <- publisher1.join
@@ -411,7 +411,7 @@ object HubSpec extends ZIOBaseSpec {
           publisher2  <- offerAll(hub, as.map(-_)).fork
           subscriber1 <- takeN_(subscription1, as.length * 2).fork
           subscriber2 <- takeN_(subscription2, as.length * 2).fork
-          _ <- ZIO
+          _           <- ZIO
                  .succeed(hub.subscribe())
                  .flatMap(subscription => ZIO.yieldNow *> ZIO.succeed(subscription.unsubscribe()))
           _ <- publisher1.join

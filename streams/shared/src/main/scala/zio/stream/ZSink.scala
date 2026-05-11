@@ -337,7 +337,7 @@ final class ZSink[-R, +E, -In, +L, +Z] private (val channel: ZChannel[R, ZNothin
         { case (leftovers, z) =>
           ZChannel.suspend {
             val leftoversRef = new AtomicReference(leftovers.filter(_.nonEmpty))
-            val refReader = ZChannel.succeed(leftoversRef.getAndSet(Chunk.empty)).flatMap { chunk =>
+            val refReader    = ZChannel.succeed(leftoversRef.getAndSet(Chunk.empty)).flatMap { chunk =>
               // This cast is safe because of the L1 >: L <: In1 bound. It follows that
               // L <: In1 and therefore Chunk[L] can be safely cast to Chunk[In1].
               val widenedChunk = chunk.asInstanceOf[Chunk[Chunk[In1]]]
@@ -663,7 +663,7 @@ final class ZSink[-R, +E, -In, +L, +Z] private (val channel: ZChannel[R, ZNothin
     self.raceWith(that)(
       {
         case Exit.Failure(err) => ZChannel.MergeDecision.done(Exit.failCause(err))
-        case Exit.Success(lz) =>
+        case Exit.Success(lz)  =>
           ZChannel.MergeDecision.await {
             case Exit.Failure(cause) => Exit.failCause(cause)
             case Exit.Success(rz)    => ZIO.succeed(f(lz, rz))
@@ -671,7 +671,7 @@ final class ZSink[-R, +E, -In, +L, +Z] private (val channel: ZChannel[R, ZNothin
       },
       {
         case Exit.Failure(err) => ZChannel.MergeDecision.done(Exit.failCause(err))
-        case Exit.Success(rz) =>
+        case Exit.Success(rz)  =>
           ZChannel.MergeDecision.await {
             case Exit.Failure(cause) => Exit.failCause(cause)
             case Exit.Success(lz)    => ZIO.succeed(f(lz, rz))

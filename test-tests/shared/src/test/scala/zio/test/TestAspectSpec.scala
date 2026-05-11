@@ -411,7 +411,7 @@ object TestAspectSpec extends ZIOBaseSpec {
     diesWith(ct.unapply(_).isDefined)
 
   def diesWith(assertion: Throwable => Boolean): TestFailure[Any] => Boolean = {
-    case TestFailure.Assertion(_, _) => false
+    case TestFailure.Assertion(_, _)   => false
     case TestFailure.Runtime(cause, _) =>
       cause.dieOption match {
         case Some(t) => assertion(t)

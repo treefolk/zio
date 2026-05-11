@@ -229,7 +229,7 @@ final class FiberRefs private (
           if (!eqWithBoxedNumericEquality(oldValue, newValue)) {
             val parentFiberId = parentHead.id
             val parentVersion = parentHead.version
-            val newEntry =
+            val newEntry      =
               if (parentFiberId eq fiberId)
                 Value(::(StackEntry(parentFiberId, newValue, parentVersion + 1), parentStack.tail), parentDepth)
               else

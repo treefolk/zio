@@ -52,7 +52,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
         for {
           refCnt  <- Ref.make(0)
           refDone <- Ref.make[Boolean](false)
-          stream = ZStream.asyncMaybe[Any, Throwable, Int](
+          stream   = ZStream.asyncMaybe[Any, Throwable, Int](
                      cb => {
                        Future
                          .sequence(
@@ -101,7 +101,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
         for {
           refCnt  <- Ref.make(0)
           refDone <- Ref.make[Boolean](false)
-          stream = ZStream.asyncZIO[Any, Throwable, Int](
+          stream   = ZStream.asyncZIO[Any, Throwable, Int](
                      cb => {
                        Future
                          .sequence(
@@ -150,7 +150,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
         for {
           refCnt  <- Ref.make(0)
           refDone <- Ref.make[Boolean](false)
-          stream = ZStream.asyncScoped[Any, Throwable, Int](
+          stream   = ZStream.asyncScoped[Any, Throwable, Int](
                      cb => {
                        Future
                          .sequence(
@@ -173,7 +173,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
         for {
           cancelled <- Ref.make(false)
           latch     <- Promise.make[Nothing, Unit]
-          fiber <- ZStream
+          fiber     <- ZStream
                      .asyncInterrupt[Any, Nothing, Unit] { offer =>
                        offer(ZIO.succeed(Chunk.unit))
                        Left(cancelled.set(true))
@@ -206,7 +206,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
           selfId  <- ZIO.fiberId
           refCnt  <- Ref.make(0)
           refDone <- Ref.make[Boolean](false)
-          stream = ZStream.asyncInterrupt[Any, Throwable, Int](
+          stream   = ZStream.asyncInterrupt[Any, Throwable, Int](
                      cb => {
                        Future
                          .sequence(

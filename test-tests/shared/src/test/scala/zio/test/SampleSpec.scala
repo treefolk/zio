@@ -30,7 +30,7 @@ object SampleSpec extends ZIOBaseSpec {
       val sample              = Sample.shrinkIntegral(0)(5)
       def f(n: Int): UIO[Int] = ZIO.succeed(n + 2)
       def g(n: Int): UIO[Int] = ZIO.succeed(n * 3)
-      val result = equalEffects(
+      val result              = equalEffects(
         sample.foreach(a => f(a).flatMap(g)),
         sample.foreach(f).flatMap(_.foreach(g))
       )

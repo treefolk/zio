@@ -52,7 +52,7 @@ object ZPool {
     for {
       iterable <- ZIO.succeed(iterable)
       source   <- Ref.make(iterable.toList)
-      get = if (iterable.isEmpty) ZIO.never
+      get       = if (iterable.isEmpty) ZIO.never
             else
               source.modify {
                 case head :: tail => (head, tail)
@@ -118,7 +118,7 @@ object ZPool {
         items    <- Queue.bounded[Attempted[E, A]](range.end)
         alloc    <- Ref.make(Set.empty[A])
         initial  <- strategy.initial
-        pool = DefaultPool(
+        pool      = DefaultPool(
                  get.provideSomeEnvironment[Scope](env.union[Scope](_)),
                  range,
                  down,
