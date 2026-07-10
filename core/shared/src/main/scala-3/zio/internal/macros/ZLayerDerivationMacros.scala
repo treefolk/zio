@@ -73,10 +73,10 @@ object ZLayerDerivationMacros {
     val hookRETypes =
       tpe.baseType(TypeRepr.of[ZLayer.Derive.Scoped].typeSymbol) match {
         case sym if sym.typeSymbol.isNoSymbol => None
-        case sym =>
+        case sym                              =>
           sym.typeArgs match {
             case r :: e :: Nil => Some((r, e))
-            case other =>
+            case other         =>
               report.errorAndAbort(
                 s"Failed to derive a ZLayer for `${tpeSymbol.fullName}`: Defect in `ZLayer.derive` found."
               )

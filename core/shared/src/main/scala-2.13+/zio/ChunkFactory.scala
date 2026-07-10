@@ -25,7 +25,7 @@ private[zio] trait ChunkFactory extends StrictOptimizedSeqFactory[Chunk] {
   final def from[A](source: IterableOnce[A]): Chunk[A] =
     source match {
       case iterable: Iterable[A] => Chunk.fromIterable(iterable)
-      case iterableOnce =>
+      case iterableOnce          =>
         val chunkBuilder = ChunkBuilder.make[A]()
         iterableOnce.iterator.foreach(chunkBuilder.addOne)
         chunkBuilder.result()

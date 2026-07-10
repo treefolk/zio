@@ -25,8 +25,8 @@ object char extends CharInstances
 
 trait CharInstances {
 
-  val digitGen: Gen[Any, Refined[Char, Digit]]   = Gen.numericChar.map(value => Refined.unsafeApply(value))
-  val letterGen: Gen[Any, Refined[Char, Letter]] = Gen.alphaChar.map(value => Refined.unsafeApply(value))
+  val digitGen: Gen[Any, Refined[Char, Digit]]         = Gen.numericChar.map(value => Refined.unsafeApply(value))
+  val letterGen: Gen[Any, Refined[Char, Letter]]       = Gen.alphaChar.map(value => Refined.unsafeApply(value))
   val lowerCaseGen: Gen[Any, Refined[Char, LowerCase]] =
     Gen.alphaChar.map(value => Refined.unsafeApply(value.toLower))
   val upperCaseGen: Gen[Any, Refined[Char, UpperCase]] =

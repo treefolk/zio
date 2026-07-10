@@ -14,7 +14,7 @@ class BubbleSortBenchmark {
   @Param(Array("1000"))
   var size: Int = _
 
-  def createTestArray: Array[Int] = Range.inclusive(1, size).toArray.reverse
+  def createTestArray: Array[Int]           = Range.inclusive(1, size).toArray.reverse
   def assertSorted(array: Array[Int]): Unit =
     if (!array.sorted.sameElements(array)) {
       throw new Exception("Array not correctly sorted")

@@ -62,7 +62,7 @@ object Reloadable {
       for {
         env       <- manual(layer).build
         reloadable = env.get[Reloadable[Out]]
-        _ <- ZIO.acquireRelease(ZIO.interruptible(reloadable.reload.ignoreLogged.schedule(schedule).forkDaemon))(
+        _         <- ZIO.acquireRelease(ZIO.interruptible(reloadable.reload.ignoreLogged.schedule(schedule).forkDaemon))(
                _.interrupt
              )
       } yield reloadable

@@ -54,8 +54,8 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
     outputBuffer: => Int = 16
   )(implicit trace: Trace): ZStream[R, E, A] =
     ZStream.unwrapScoped[R](for {
-      output  <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
-      runtime <- ZIO.runtime[R]
+      output       <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
+      runtime      <- ZIO.runtime[R]
       eitherStream <-
         ZIO.succeed {
           register { k =>
@@ -69,7 +69,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
         }
     } yield {
       eitherStream match {
-        case Right(value) => ZStream.unwrap(output.shutdown as value)
+        case Right(value)   => ZStream.unwrap(output.shutdown as value)
         case Left(canceler) =>
           lazy val loop: ZChannel[Any, Any, Any, Any, E, Chunk[A], Unit] =
             ZChannel.unwrap(
@@ -102,7 +102,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
       for {
         output  <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
         runtime <- ZIO.runtime[R]
-        _ <- register { k =>
+        _       <- register { k =>
                try {
                  runtime.unsafe.runToFuture(stream.Take.fromPull(k).flatMap(output.offer))(trace, Unsafe.unsafe)
                } catch {
@@ -111,7 +111,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
                }
              }
         done <- Ref.make(false)
-        pull = done.get.flatMap {
+        pull  = done.get.flatMap {
                  if (_)
                    Pull.end
                  else
@@ -133,7 +133,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
     ZStream.fromChannel(ZChannel.unwrapScoped[R](for {
       output  <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
       runtime <- ZIO.runtime[R]
-      _ <- register { k =>
+      _       <- register { k =>
              try {
                runtime.unsafe.runToFuture(stream.Take.fromPull(k).flatMap(output.offer))(trace, Unsafe.unsafe)
              } catch {
@@ -174,7 +174,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
     trace: Trace
   ): ZStream[Any, Throwable, Byte] = {
     import scalajs.js.Dynamic.{global => g}
-    val fs = g.require("fs")
+    val fs     = g.require("fs")
     val reader = fs.createReadStream(
       file,
       new js.Object {

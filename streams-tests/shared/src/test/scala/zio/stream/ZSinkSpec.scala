@@ -366,7 +366,7 @@ object ZSinkSpec extends ZIOBaseSpec {
             for {
               closed <- Ref.make[Boolean](false)
               res     = ZIO.acquireRelease(ZIO.succeed(100))(_ => closed.set(true))
-              sink =
+              sink    =
                 ZSink.unwrapScoped(res.map(m => ZSink.count.mapZIO(cnt => closed.get.map(cl => (cnt + m, cl)))))
               resAndState <- ZStream(1, 2, 3).run(sink)
               finalState  <- closed.get
@@ -553,7 +553,7 @@ object ZSinkSpec extends ZIOBaseSpec {
           def run[E](stream: ZStream[Any, E, Int]) =
             (for {
               effects <- Ref.make[List[Int]](Nil)
-              exit <- stream
+              exit    <- stream
                         .transduce(ZSink.foldZIO(0)(_ => true) { (_, a: Int) =>
                           effects.update(a :: _) *> ZIO.succeed(30)
                         })
@@ -598,7 +598,7 @@ object ZSinkSpec extends ZIOBaseSpec {
           def run[E](stream: ZStream[Any, E, Int]) =
             (for {
               effects <- Ref.make[List[Int]](Nil)
-              exit <- stream
+              exit    <- stream
                         .transduce(ZSink.foldZIO(0)(_ => true) { (_, a: Int) =>
                           effects.update(a :: _) *> ZIO.succeed(30)
                         })
@@ -732,7 +732,7 @@ object ZSinkSpec extends ZIOBaseSpec {
         test("foldSink over a dying sink") {
           case object Death extends RuntimeException("not today!")
           val dyingSink: ZSink[Any, Nothing, Any, Nothing, Nothing] = ZSink.failCause(Cause.die(Death))
-          val foldedSink: ZSink[Any, String, Any, Nothing, String] = dyingSink
+          val foldedSink: ZSink[Any, String, Any, Nothing, String]  = dyingSink
             .foldSink(
               _ => ZSink.fail("it's a fail"),
               _ => ZSink.succeed("it's a success")
@@ -757,7 +757,7 @@ object ZSinkSpec extends ZIOBaseSpec {
         test("refineOrDie") {
           val exception = new Exception
           val refinedTo = "refined"
-          val s =
+          val s         =
             ZSink
               .fail(exception)
               .refineOrDie { case _: Exception =>
@@ -876,7 +876,7 @@ object ZSinkSpec extends ZIOBaseSpec {
             promise1 <- Promise.make[Nothing, Unit]
             promise2 <- Promise.make[Nothing, Unit]
             hub      <- Hub.unbounded[Int]
-            f <- ZIO.scoped {
+            f        <- ZIO.scoped {
                    hub.subscribe.flatMap(s => promise1.succeed(()) *> promise2.await *> s.takeAll)
                  }.fork
             _              <- promise1.await
@@ -1058,10 +1058,10 @@ object ZSinkSpec extends ZIOBaseSpec {
 
               val gen =
                 for {
-                  sequenceSize <- Gen.int(1, 50)
-                  takers       <- Gen.int(1, 5)
-                  takeSizes    <- Gen.listOfN(takers)(Gen.int(1, sequenceSize))
-                  inputs       <- Gen.chunkOfN(sequenceSize)(ZStreamGen.tinyChunkOf(Gen.int))
+                  sequenceSize                             <- Gen.int(1, 50)
+                  takers                                   <- Gen.int(1, 5)
+                  takeSizes                                <- Gen.listOfN(takers)(Gen.int(1, sequenceSize))
+                  inputs                                   <- Gen.chunkOfN(sequenceSize)(ZStreamGen.tinyChunkOf(Gen.int))
                   (expectedTakes, leftoverInputs, wasSplit) = takeSizes.foldLeft((Chunk[Chunk[Int]](), inputs, false)) {
                                                                 case ((takenChunks, leftover, _), takeSize) =>
                                                                   val (taken, rest, wasSplit) =

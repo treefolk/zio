@@ -25,7 +25,7 @@ object SinkUtils {
       r  <- stream.run(s1.raceBoth(s2)).either
     } yield {
       r match {
-        case Left(_) => assert(r1)(Assertion.isLeft) || assert(r2)(Assertion.isLeft)
+        case Left(_)  => assert(r1)(Assertion.isLeft) || assert(r2)(Assertion.isLeft)
         case Right(v) => {
           v match {
             case Left(w)  => assert(Right(w))(equalTo(r1))

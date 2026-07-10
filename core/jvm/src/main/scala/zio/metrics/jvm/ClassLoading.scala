@@ -16,7 +16,7 @@ object ClassLoading {
     ZLayer.scoped {
       for {
         classLoadingMXBean <- ZIO.attempt(ManagementFactory.getPlatformMXBean(classOf[ClassLoadingMXBean]))
-        loadedClassCount =
+        loadedClassCount    =
           PollingMetric(
             Metric
               .gauge("jvm_classes_loaded")

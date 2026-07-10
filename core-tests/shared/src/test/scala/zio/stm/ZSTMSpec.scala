@@ -169,7 +169,7 @@ object ZSTMSpec extends ZIOBaseSpec {
       ) @@ zioTag(errors),
       test("fold to handle both failure and success") {
         implicit val canFail = CanFail
-        val stm = for {
+        val stm              = for {
           s <- STM.succeed("Yes!").fold(_ => -1, _ => 1)
           f <- STM.fail("No!").fold(_ => -1, _ => 1)
         } yield (s, f)
@@ -177,7 +177,7 @@ object ZSTMSpec extends ZIOBaseSpec {
       } @@ zioTag(errors),
       test("foldSTM to fold over the `STM` effect, and handle failure and success") {
         implicit val canFail = CanFail
-        val stm = for {
+        val stm              = for {
           s <- STM.succeed("Yes!").foldSTM(_ => STM.succeed("No!"), STM.succeed(_))
           f <- STM.fail("No!").foldSTM(STM.succeed(_), _ => STM.succeed("Yes!"))
         } yield (s, f)
@@ -371,7 +371,7 @@ object ZSTMSpec extends ZIOBaseSpec {
         test("evaluates effects in correct order") {
           implicit val canFail = CanFail
           val as               = List(2, 4, 6, 3, 5, 6)
-          val tx =
+          val tx               =
             for {
               ref     <- TRef.make(List.empty[Int])
               _       <- STM.partition(as)(a => ref.update(a :: _))
@@ -574,7 +574,7 @@ object ZSTMSpec extends ZIOBaseSpec {
           for {
             tvar1 <- TRef.makeCommit(10)
             tvar2 <- TRef.makeCommit("Failed!")
-            join <- (for {
+            join  <- (for {
                       v1 <- tvar1.get
                       _  <- STM.check(v1 > 0)
                       _  <- tvar2.set("Succeeded!")
@@ -677,7 +677,7 @@ object ZSTMSpec extends ZIOBaseSpec {
         "Perform atomically a single transaction that has a tvar for 20 fibers, each one checks the value and increment it."
       ) {
         for {
-          tvar <- TRef.makeCommit(0)
+          tvar  <- TRef.makeCommit(0)
           fiber <- ZIO.forkAll(
                      (0 to 20).map(i =>
                        (for {
@@ -695,7 +695,7 @@ object ZSTMSpec extends ZIOBaseSpec {
         test("interrupt the fiber should terminate the transaction") {
           val barrier = new UnpureBarrier
           for {
-            tvar <- TRef.makeCommit(0)
+            tvar  <- TRef.makeCommit(0)
             fiber <- (for {
                        v <- tvar.get
                        _ <- STM.succeed(barrier.open())
@@ -713,7 +713,7 @@ object ZSTMSpec extends ZIOBaseSpec {
         ) {
           val barrier = new UnpureBarrier
           for {
-            tvar <- TRef.makeCommit(0)
+            tvar  <- TRef.makeCommit(0)
             fiber <- ZIO.forkAll(List.fill(100)((for {
                        v <- tvar.get
                        _ <- STM.succeed(barrier.open())
@@ -829,7 +829,7 @@ object ZSTMSpec extends ZIOBaseSpec {
       test("rollback full transaction") {
         for {
           tvar <- TRef.makeCommit(0)
-          e <- (for {
+          e    <- (for {
                  _ <- tvar.update(_ + 10)
                  _ <- STM.fail("Error!")
                } yield ()).commit.either
@@ -839,7 +839,7 @@ object ZSTMSpec extends ZIOBaseSpec {
       test("be ignored") {
         for {
           tvar <- TRef.makeCommit(0)
-          e <- (for {
+          e    <- (for {
                  _ <- tvar.update(_ + 10)
                  _ <- STM.fail("Error!")
                } yield ()).commit.ignore
@@ -885,7 +885,7 @@ object ZSTMSpec extends ZIOBaseSpec {
         for {
           ref1 <- TRef.makeCommit(0)
           ref2 <- TRef.makeCommit(0)
-          txn1 = ref1.get.flatMap {
+          txn1  = ref1.get.flatMap {
                    case 0 => STM.retry
                    case n => STM.succeed(n)
                  } orElse ref2.get.flatMap {
@@ -1280,8 +1280,8 @@ object ZSTMSpec extends ZIOBaseSpec {
   }
 
   class UnpureBarrier {
-    private var isOpen = false
-    def open(): Unit   = isOpen = true
+    private var isOpen  = false
+    def open(): Unit    = isOpen = true
     def await: UIO[Any] =
       ZIO
         .suspend(ZIO.attempt(if (isOpen) () else throw new Exception()))
@@ -1352,7 +1352,7 @@ object ZSTMSpec extends ZIOBaseSpec {
         node = Node(a, end)
         t   <- tail.get
         tn  <- t.next.get
-        _ <- tn match {
+        _   <- tn match {
                case End() => t.next.set(node).flatMap(_ => tail.set(node))
                case _     => ZSTM.dieMessage("this should never happen")
              }
@@ -1362,7 +1362,7 @@ object ZSTMSpec extends ZIOBaseSpec {
       for {
         h  <- head.get
         hn <- h.next.get
-        r <- hn match {
+        r  <- hn match {
                case n @ Node(a, _) => head.set(n.copy(data = null)).as(Some(a))
                case End()          => ZSTM.succeed(None)
              }

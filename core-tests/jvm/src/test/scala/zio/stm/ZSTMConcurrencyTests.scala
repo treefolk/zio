@@ -124,7 +124,7 @@ object ZSTMConcurrencyTests {
         fresh <- TRef.make(false)
         inner <- outer.get
         value <- inner.get
-        _ <- if (value) ZSTM.fail("fail")
+        _     <- if (value) ZSTM.fail("fail")
              else inner.set(true) *> outer.set(fresh)
       } yield value
       val zio = ZIO.foreachParDiscard(1 to 1000)(_ => stm.commit)

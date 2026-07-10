@@ -182,7 +182,7 @@ trait TestRenderer {
     }
 
   def renderCause(cause: Cause[Any], offset: Int)(implicit trace: Trace): Message = {
-    val defects = cause.defects
+    val defects  = cause.defects
     val timeouts = defects.collect { case TestTimeoutException(message) =>
       Message(message)
     }
@@ -236,8 +236,8 @@ trait TestRenderer {
   private def renderGenFailureDetails(failureDetails: Option[GenFailureDetails], offset: Int): Message =
     failureDetails match {
       case Some(details) =>
-        val shrunken = PrettyPrint(details.shrunkenInput)
-        val initial  = PrettyPrint(details.initialInput)
+        val shrunken       = PrettyPrint(details.shrunkenInput)
+        val initial        = PrettyPrint(details.initialInput)
         val renderShrunken = withOffset(offset + 1)(
           Fragment(
             s"Test failed after ${details.iterations + 1} iteration${if (details.iterations > 0) "s" else ""} with input: "

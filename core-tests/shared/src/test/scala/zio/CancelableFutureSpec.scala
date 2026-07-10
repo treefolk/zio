@@ -45,7 +45,7 @@ object CancelableFutureSpec extends ZIOBaseSpec {
       test("unsafeRunToFuture") {
         for {
           runtime <- ZIO.runtime[Any]
-          _ <- ZIO.fromFuture { implicit ec =>
+          _       <- ZIO.fromFuture { implicit ec =>
                  Future.traverse(0 to 1000) { _ =>
                    Unsafe.unsafe { implicit unsafe =>
                      runtime.unsafe.runToFuture(ZIO.unit)
@@ -85,7 +85,7 @@ object CancelableFutureSpec extends ZIOBaseSpec {
         for {
           p  <- Promise.make[Nothing, Unit]
           p2 <- Promise.make[Nothing, Int]
-          f <- (p.succeed(()) *> ZIO.never)
+          f  <- (p.succeed(()) *> ZIO.never)
                  .onInterrupt(p2.succeed(42))
                  .toFuture
           _    <- p.await

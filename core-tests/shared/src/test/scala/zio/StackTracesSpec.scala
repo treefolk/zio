@@ -143,8 +143,8 @@ object StackTracesSpec extends ZIOBaseSpec {
     ),
     suite("getOrThrowFiberFailure")(
       test("fills in the external stack trace") {
-        def call(): Unit = subcall()
-        def subcall2()   = ZIO.fail("boom")
+        def call(): Unit    = subcall()
+        def subcall2()      = ZIO.fail("boom")
         def subcall(): Unit = Unsafe.unsafe { implicit unsafe =>
           Runtime.default.unsafe
             .run(subcall2())
@@ -184,8 +184,8 @@ object StackTracesSpec extends ZIOBaseSpec {
     ) @@ jvmOnly,
     suite("getOrThrow")(
       test("fills in the external stack trace (as suppressed)") {
-        def call(): Unit = subcall()
-        def subcall2()   = ZIO.die(new RuntimeException("boom"))
+        def call(): Unit    = subcall()
+        def subcall2()      = ZIO.die(new RuntimeException("boom"))
         def subcall(): Unit = Unsafe.unsafe { implicit unsafe =>
           Runtime.default.unsafe
             .run(subcall2())

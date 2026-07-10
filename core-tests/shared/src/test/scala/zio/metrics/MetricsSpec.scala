@@ -37,7 +37,7 @@ object MetricsSpec extends ZIOBaseSpec {
         _ <- ZIO.succeed("strValue1") @@ frequency
         // set of metrics in the current snapshot may include metrics from other tests
         allMetricsSnapshot <- ZIO.metrics
-        testSnapshot <-
+        testSnapshot       <-
           ZIO.succeed(
             Metrics(
               allMetricsSnapshot.metrics.filter(m =>

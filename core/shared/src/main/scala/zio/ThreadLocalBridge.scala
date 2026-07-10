@@ -18,14 +18,14 @@ object ThreadLocalBridge {
   val live: ZLayer[Any, Nothing, ThreadLocalBridge] = ZLayer.suspend {
     val supervisor      = new FiberRefTrackingSupervisor
     val supervisorLayer = Runtime.addSupervisor(supervisor)
-    val bridgeLayer = ZLayer.succeed {
+    val bridgeLayer     = ZLayer.succeed {
       new ThreadLocalBridge {
         def makeFiberRef[A](initialValue: A)(link: A => Unit): ZIO[Scope, Nothing, FiberRef[A]] =
           for {
             fiberRef <- FiberRef.make(initialValue)
             _         = link(initialValue)
             _         = supervisor.trackFiberRef(fiberRef, link)(Unsafe.unsafe)
-            _ <- Scope.addFinalizer(
+            _        <- Scope.addFinalizer(
                    ZIO.succeed {
                      link(initialValue)
                      supervisor.forgetFiberRef(fiberRef, link)(Unsafe.unsafe)

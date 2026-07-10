@@ -19,7 +19,7 @@ object AutoWireSpec extends ZIOBaseSpec {
           test("automatically constructs a layer from its dependencies") {
             val doubleLayer: ULayer[Double] = ZLayer.succeed(100.1)
             val stringLayer                 = ZLayer.succeed("this string is 28 chars long")
-            val intLayer =
+            val intLayer                    =
               ZLayer {
                 for {
                   str    <- ZIO.service[String]
@@ -27,7 +27,7 @@ object AutoWireSpec extends ZIOBaseSpec {
                 } yield str.length + double.toInt
               }
 
-            val program: URIO[Int, Int] = ZIO.service[Int]
+            val program: URIO[Int, Int]          = ZIO.service[Int]
             val injected: ZIO[Any, Nothing, Int] =
               program.provide(intLayer, stringLayer, doubleLayer)
 
@@ -42,7 +42,7 @@ object AutoWireSpec extends ZIOBaseSpec {
 
             for {
               ref <- Ref.make(0)
-              _ <- (ZIO.service[Int] <*> ZIO.service[Boolean])
+              _   <- (ZIO.service[Int] <*> ZIO.service[Boolean])
                      .provide(layerA, layerB, sideEffectingLayer(ref))
               result <- ref.get
             } yield assertTrue(result == 1)
@@ -119,7 +119,7 @@ object AutoWireSpec extends ZIOBaseSpec {
         ),
         suite("`ZLayer.make`")(
           test("automatically constructs a layer") {
-            val doubleLayer = ZLayer.succeed(100.1)
+            val doubleLayer                 = ZLayer.succeed(100.1)
             val stringLayer: ULayer[String] =
               ZLayer.succeed("this string is 28 chars long")
             val intLayer = ZLayer {
@@ -216,7 +216,7 @@ object AutoWireSpec extends ZIOBaseSpec {
           },
           test("takes trace from the implicit scope") {
             var numTraces: Int = 0
-            val layer = {
+            val layer          = {
               implicit def trace: Trace = {
                 numTraces += 1
                 Trace.empty
@@ -234,7 +234,7 @@ object AutoWireSpec extends ZIOBaseSpec {
         suite("`ZLayer.makeSome`")(
           test("automatically constructs a layer, leaving off some remainder") {
             val stringLayer = ZLayer.succeed("this string is 28 chars long")
-            val intLayer = ZLayer {
+            val intLayer    = ZLayer {
               (ZIO.service[String] <*> ZIO.service[Double]).map { case (str, double) =>
                 str.length + double.toInt
               }
@@ -288,13 +288,13 @@ object AutoWireSpec extends ZIOBaseSpec {
       })
     }
 
-    trait Fly {}
+    trait Fly  {}
     object Fly {
       def live: URLayer[Spider, Fly]          = ZLayer.succeed(new Fly {})
       def manEatingFly: URLayer[OldLady, Fly] = ZLayer.succeed(new Fly {})
     }
 
-    trait Spider {}
+    trait Spider  {}
     object Spider {
       def live: ULayer[Spider] = ZLayer.succeed(new Spider {})
     }

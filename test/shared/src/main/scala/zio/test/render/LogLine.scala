@@ -25,13 +25,13 @@ object LogLine {
     def +(fragment: Fragment) =
       this +++ Message(Vector(Line(Vector(fragment))))
 
-    def +:(line: Line) = Message(line +: lines)
+    def +:(line: Line)                  = Message(line +: lines)
     def :+(fragment: Fragment): Message = Message(lines match {
       case line +: lines => (fragment +: line) +: lines
       case _             => Vector(fragment.toLine)
     })
-    def :+(line: Line)       = Message(lines :+ line)
-    def ++(message: Message) = Message(lines ++ message.lines)
+    def :+(line: Line)        = Message(lines :+ line)
+    def ++(message: Message)  = Message(lines ++ message.lines)
     def +++(message: Message) =
       (lines.lastOption, message.lines.headOption) match {
         case (Some(last), Some(head)) =>
@@ -63,7 +63,7 @@ object LogLine {
     def withOffset(shift: Int): Line       = copy(offset = offset + shift)
     def toMessage: Message                 = Message(Vector(this))
 
-    def optimized: Line = copy(fragments = optimize(fragments))
+    def optimized: Line                               = copy(fragments = optimize(fragments))
     private def optimize(fragments: Vector[Fragment]) =
       fragments
         .foldRight(List.empty[Fragment]) { case (curr, rest) =>

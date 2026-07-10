@@ -188,7 +188,7 @@ final case class LayerBuilder[Type, Expr](
     val unusedRemainderLayers = remainderNodes.filterNot(node => usedLayers(showExpr(node.value)))
 
     method match {
-      case ProvideMethod.Provide => ()
+      case ProvideMethod.Provide                                       => ()
       case ProvideMethod.ProvideSome | ProvideMethod.ProvideSomeShared =>
         if (!method.isProvideSomeShared && unusedRemainderLayers.nonEmpty) {
           val message = "\n" + TerminalRendering.unusedProvideSomeLayersError(

@@ -206,7 +206,7 @@ object TestClock extends Serializable {
      */
     def sleep(duration: => Duration)(implicit trace: Trace): UIO[Unit] =
       for {
-        promise <- Promise.make[Nothing, Unit]
+        promise     <- Promise.make[Nothing, Unit]
         shouldAwait <- clockState.modify { data =>
                          val end = data.instant.plus(duration)
                          if (end.isAfter(data.instant))
@@ -317,7 +317,7 @@ object TestClock extends Serializable {
     def supervisedFibers(implicit trace: Trace): UIO[SortedSet[Fiber.Runtime[Any, Any]]] =
       ZIO.fiberIdWith { fiberId =>
         annotations.get(TestAnnotation.fibers).flatMap {
-          case Left(_) => ZIO.succeed(SortedSet.empty[Fiber.Runtime[Any, Any]])
+          case Left(_)     => ZIO.succeed(SortedSet.empty[Fiber.Runtime[Any, Any]])
           case Right(refs) =>
             ZIO
               .foreach(refs)(ref => ZIO.succeed(ref.get))
@@ -340,7 +340,7 @@ object TestClock extends Serializable {
             case _ => (None, Data(end, data.sleeps, data.timeZone))
           }
         }.flatMap {
-          case None => ZIO.unit
+          case None                 => ZIO.unit
           case Some((end, promise)) =>
             promise.succeed(()) *>
               ZIO.yieldNow *>

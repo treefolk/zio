@@ -15,7 +15,7 @@ object GarbageCollector {
   val live: ZLayer[JvmMetricsSchedule, Throwable, GarbageCollector] =
     ZLayer.scoped {
       for {
-        gcMXBeans <- ZIO.attempt(ManagementFactory.getGarbageCollectorMXBeans.asScala)
+        gcMXBeans             <- ZIO.attempt(ManagementFactory.getGarbageCollectorMXBeans.asScala)
         gcCollectionSecondsSum = PollingMetric.collectAll(gcMXBeans.map { gc =>
                                    PollingMetric(
                                      Metric

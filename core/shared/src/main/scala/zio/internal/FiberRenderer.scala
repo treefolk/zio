@@ -33,7 +33,7 @@ private[zio] object FiberRenderer {
     val minutes     = seconds / 60L
     val hours       = minutes / 60L
 
-    val name = "\"" + dump.fiberId.threadName + "\""
+    val name    = "\"" + dump.fiberId.threadName + "\""
     val lifeMsg = (if (hours == 0) "" else s"${hours}h ") +
       (if (hours == 0 && minutes == 0) "" else s"${minutes}m ") +
       (if (hours == 0 && minutes == 0 && seconds == 0) "" else s"${seconds}s ") +
@@ -60,7 +60,7 @@ private[zio] object FiberRenderer {
 
   private def renderStatus(status: Fiber.Status): String =
     status match {
-      case Done => "Done"
+      case Done                          => "Done"
       case Running(runtimeFlags, trace0) =>
         val flags = renderFlags(runtimeFlags)
         val trace = renderTrace(trace0)

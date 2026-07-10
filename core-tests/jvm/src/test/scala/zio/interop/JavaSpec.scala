@@ -160,7 +160,7 @@ object JavaSpec extends ZIOBaseSpec {
     suite("`ZIO.toCompletableFutureE` must")(
       test("convert error of type `E` to `Throwable`") {
         val failedIO: IO[String, Unit] = ZIO.fail[String]("IOs also can fail")
-        val failedFuture: Task[Unit] =
+        val failedFuture: Task[Unit]   =
           failedIO.toCompletableFutureWith(new Exception(_)).flatMap(f => ZIO.attempt(f.get()))
         assertZIO(failedFuture.exit)(
           fails[Throwable](hasField("message", _.getMessage, equalTo("java.lang.Exception: IOs also can fail")))

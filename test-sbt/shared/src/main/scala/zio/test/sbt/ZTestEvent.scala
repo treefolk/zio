@@ -23,7 +23,7 @@ final case class ZTestEvent(
 object ZTestEvent {
 
   def convertEvent(test: ExecutionEvent.Test[_], taskDef: TaskDef, renderer: TestRenderer): Event = {
-    val status = statusFrom(test)
+    val status         = statusFrom(test)
     val maybeThrowable = status match {
       case Status.Failure =>
         // Includes ansii colors
@@ -47,7 +47,7 @@ object ZTestEvent {
 
   private def statusFrom(test: ExecutionEvent.Test[_]): Status =
     test.test match {
-      case Left(_) => Status.Failure
+      case Left(_)      => Status.Failure
       case Right(value) =>
         value match {
           case TestSuccess.Succeeded(_) => Status.Success

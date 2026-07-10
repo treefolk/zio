@@ -235,7 +235,7 @@ object Supervisor {
       else {
         val oldSupervisors = toSet(oldValue)
         val newSupervisors = toSet(newValue)
-        val added = newSupervisors
+        val added          = newSupervisors
           .diff(oldSupervisors)
           .foldLeft(empty)((patch, supervisor) => patch.combine(AddSupervisor(supervisor)))
         val removed = oldSupervisors

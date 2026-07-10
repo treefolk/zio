@@ -33,11 +33,13 @@ private[compression] object Deflate {
     flushMode: FlushMode
   )(implicit trace: Trace): ZIO[Scope, Nothing, Option[Chunk[Byte]] => ZIO[Any, Nothing, Chunk[Byte]]] =
     ZIO
-      .acquireRelease(ZIO.succeed {
-        val deflater = new Deflater(level.jValue, noWrap)
-        deflater.setStrategy(strategy.jValue)
-        (deflater, new Array[Byte](bufferSize))
-      }) { case (deflater, _) =>
+      .acquireRelease(
+        ZIO.succeed {
+          val deflater = new Deflater(level.jValue, noWrap)
+          deflater.setStrategy(strategy.jValue)
+          (deflater, new Array[Byte](bufferSize))
+        }
+      ) { case (deflater, _) =>
         ZIO.succeed(deflater.end())
       }
       .map {

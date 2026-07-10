@@ -568,7 +568,7 @@ class Zio2Upgrade extends SemanticRule("Zio2Upgrade") {
     def unapply(tree: Tree)(implicit sdoc: SemanticDocument): Option[Patch] = {
       val partial: PartialFunction[Tree, Patch] = {
         case t @ Type.Apply.After_4_6_0(tpe: Type, argClause) if hasNormalized.matches(tpe.symbol) =>
-          val args = argClause.values
+          val args                                = argClause.values
           val builtInServices: Seq[SymbolMatcher] =
             List(
               randomMigrator,
@@ -739,7 +739,7 @@ class Zio2Upgrade extends SemanticRule("Zio2Upgrade") {
   }
 
   object Zio2ZIOSpec extends SemanticRule("ZIOSpecMigration") {
-    val zio2UpgradeRule = new Zio2Upgrade()
+    val zio2UpgradeRule             = new Zio2Upgrade()
     val AbstractRunnableSpecRenames = zio2UpgradeRule.Renames(
       List("zio.test.DefaultRunnableSpec" /* TODO What other types here? */ ),
       Map(
