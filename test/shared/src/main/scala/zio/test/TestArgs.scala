@@ -65,12 +65,12 @@ object TestArgs {
         (k, v.map(_._2))
       }
 
-    val terms          = parsedArgs.getOrElse("testSearchTerm", Nil)
-    val tags           = parsedArgs.getOrElse("tagSearchTerm", Nil)
-    val ignoreTags     = parsedArgs.getOrElse("tagIgnoreTerm", Nil)
-    val testTaskPolicy = parsedArgs.getOrElse("policy", Nil).headOption
-    val testRenderer   = parsedArgs.getOrElse("renderer", Nil).headOption.map(_.toLowerCase)
-    val printSummary   = parsedArgs.getOrElse("summary", Nil).headOption.forall(_.toBoolean)
+    val terms             = parsedArgs.getOrElse("testSearchTerm", Nil)
+    val tags              = parsedArgs.getOrElse("tagSearchTerm", Nil)
+    val ignoreTags        = parsedArgs.getOrElse("tagIgnoreTerm", Nil)
+    val testTaskPolicy    = parsedArgs.getOrElse("policy", Nil).headOption
+    val testRenderer      = parsedArgs.getOrElse("renderer", Nil).headOption.map(_.toLowerCase)
+    val printSummary      = parsedArgs.getOrElse("summary", Nil).headOption.forall(_.toBoolean)
     val typedTestRenderer =
       testRenderer match {
         case Some(value) if value == "intellij" => IntelliJRenderer

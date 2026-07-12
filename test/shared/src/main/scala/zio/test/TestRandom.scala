@@ -509,7 +509,7 @@ object TestRandom extends Serializable {
             }
           } match {
             case Some(nextNextGaussian) => nextNextGaussian
-            case None =>
+            case None                   =>
               @tailrec
               def loop: (Double, Double, Double) = {
                 val d1     = randomDouble

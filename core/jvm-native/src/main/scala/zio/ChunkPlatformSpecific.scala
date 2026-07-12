@@ -26,7 +26,7 @@ private[zio] trait ChunkPlatformSpecific {
     def fromValue[A](a: A): ClassTag[A] =
       if (a == null) classTag[AnyRef].asInstanceOf[ClassTag[A]]
       else {
-        val c = a.getClass
+        val c            = a.getClass
         val unboxedClass =
           if (isBoolean(c)) BooleanClass.asInstanceOf[Class[A]]
           else if (isByte(c)) ByteClass.asInstanceOf[Class[A]]

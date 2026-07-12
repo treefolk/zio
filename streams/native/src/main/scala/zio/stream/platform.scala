@@ -62,8 +62,8 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
     outputBuffer: => Int = 16
   )(implicit trace: Trace): ZStream[R, E, A] =
     ZStream.unwrapScoped[R](for {
-      output  <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
-      runtime <- ZIO.runtime[R]
+      output       <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
+      runtime      <- ZIO.runtime[R]
       eitherStream <-
         ZIO.succeed {
           register { k =>
@@ -79,7 +79,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
         }
     } yield {
       eitherStream match {
-        case Right(value) => ZStream.unwrap(output.shutdown as value)
+        case Right(value)   => ZStream.unwrap(output.shutdown as value)
         case Left(canceler) =>
           lazy val loop: ZChannel[Any, Any, Any, Any, E, Chunk[A], Unit] =
             ZChannel.unwrap(
@@ -112,7 +112,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
       for {
         output  <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
         runtime <- ZIO.runtime[R]
-        _ <- register { k =>
+        _       <- register { k =>
                try {
                  runtime.unsafe.run(stream.Take.fromPull(k).flatMap(output.offer))(trace, Unsafe.unsafe)
                  ()
@@ -122,7 +122,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
                }
              }
         done <- Ref.make(false)
-        pull = done.get.flatMap {
+        pull  = done.get.flatMap {
                  if (_)
                    Pull.end
                  else
@@ -144,7 +144,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
     ZStream.fromChannel(ZChannel.unwrapScoped[R](for {
       output  <- ZIO.acquireRelease(Queue.bounded[stream.Take[E, A]](outputBuffer))(_.shutdown)
       runtime <- ZIO.runtime[R]
-      _ <- register { k =>
+      _       <- register { k =>
              try {
                runtime.unsafe.run(stream.Take.fromPull(k).flatMap(output.offer))(trace, Unsafe.unsafe)
                ()
@@ -226,7 +226,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
               for {
                 bytesRead <- ZIO.attempt(channel.read(reusableBuffer)).asSomeError
                 _         <- Exit.failNone.when(bytesRead == -1)
-                chunk <- ZIO.succeed {
+                chunk     <- ZIO.succeed {
                            reusableBuffer.flip()
                            Chunk.fromByteBuffer(reusableBuffer)
                          }
@@ -247,7 +247,7 @@ private[stream] trait ZStreamPlatformSpecificConstructors {
         for {
           bufArray  <- ZIO.succeed(Array.ofDim[Char](chunkSize))
           bytesRead <- ZIO.attemptBlockingIO(reader.read(bufArray)).asSomeError
-          chars <- if (bytesRead < 0)
+          chars     <- if (bytesRead < 0)
                      Exit.failNone
                    else if (bytesRead == 0)
                      Exit.emptyChunk

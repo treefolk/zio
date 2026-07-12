@@ -107,7 +107,7 @@ object ZManagedPlatformSpecificSpec extends ZIOBaseSpec {
                         .mapAttempt(f => f.toPath())
                         .use { path =>
                           for {
-                            _ <- ZManaged.writeFile(path).use(fos => fos.write(fixture))
+                            _      <- ZManaged.writeFile(path).use(fos => fos.write(fixture))
                             result <- ZManaged
                                         .readURL(s"file://${path.toString()}")
                                         .use(is => is.readAll(4096))
@@ -124,7 +124,7 @@ object ZManagedPlatformSpecificSpec extends ZIOBaseSpec {
                         .mapAttempt(f => f.toPath())
                         .use { path =>
                           for {
-                            _ <- ZManaged.writeFile(path).use(fos => fos.write(fixture))
+                            _      <- ZManaged.writeFile(path).use(fos => fos.write(fixture))
                             result <- ZManaged
                                         .readURL(s"file://${path.toString()}")
                                         .use(is => is.readN(4))
@@ -141,7 +141,7 @@ object ZManagedPlatformSpecificSpec extends ZIOBaseSpec {
                         .mapAttempt(f => f.toPath())
                         .use { path =>
                           for {
-                            _ <- ZManaged.writeFile(path).use(fos => fos.write(fixture))
+                            _      <- ZManaged.writeFile(path).use(fos => fos.write(fixture))
                             result <- ZManaged
                                         .readURL(s"file://${path.toString()}")
                                         .use(is => is.skip(2) *> is.readAll(4096))

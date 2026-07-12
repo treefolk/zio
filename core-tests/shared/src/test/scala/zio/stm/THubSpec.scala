@@ -16,16 +16,15 @@ object THubSpec extends ZIOBaseSpec {
         test("with one publisher and one subscriber") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.bounded[Int](n).commit
-              subscriber <- ZIO.scoped {
-                              hub.subscribeScoped.flatMap { subscription =>
-                                promise1.succeed(()) *> promise2.await *> ZIO.foreach(as.take(n))(_ =>
-                                  subscription.take.commit
-                                )
-                              }
-                            }.fork
+              promise1   <- Promise.make[Nothing, Unit]
+              promise2   <- Promise.make[Nothing, Unit]
+              hub        <- THub.bounded[Int](n).commit
+              subscriber <-
+                ZIO.scoped {
+                  hub.subscribeScoped.flatMap { subscription =>
+                    promise1.succeed(()) *> promise2.await *> ZIO.foreach(as.take(n))(_ => subscription.take.commit)
+                  }
+                }.fork
               _      <- promise1.await
               _      <- ZIO.foreach(as.take(n))(a => hub.publish(a).commit)
               _      <- promise2.succeed(())
@@ -36,10 +35,10 @@ object THubSpec extends ZIOBaseSpec {
         test("with one publisher and two subscribers") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              promise3 <- Promise.make[Nothing, Unit]
-              hub      <- THub.bounded[Int](n).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              promise3    <- Promise.make[Nothing, Unit]
+              hub         <- THub.bounded[Int](n).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped
@@ -69,8 +68,8 @@ object THubSpec extends ZIOBaseSpec {
         test("one to one") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise <- Promise.make[Nothing, Unit]
-              hub     <- THub.bounded[Int](n).commit
+              promise    <- Promise.make[Nothing, Unit]
+              hub        <- THub.bounded[Int](n).commit
               subscriber <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -86,9 +85,9 @@ object THubSpec extends ZIOBaseSpec {
         test("one to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.bounded[Int](n).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.bounded[Int](n).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -113,9 +112,9 @@ object THubSpec extends ZIOBaseSpec {
         test("many to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.bounded[Int](n * 2).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.bounded[Int](n * 2).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -145,8 +144,8 @@ object THubSpec extends ZIOBaseSpec {
         test("one to one") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise <- Promise.make[Nothing, Unit]
-              hub     <- THub.bounded[Int](n).commit
+              promise    <- Promise.make[Nothing, Unit]
+              hub        <- THub.bounded[Int](n).commit
               subscriber <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -162,9 +161,9 @@ object THubSpec extends ZIOBaseSpec {
         test("one to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.bounded[Int](n).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.bounded[Int](n).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -189,9 +188,9 @@ object THubSpec extends ZIOBaseSpec {
         test("many to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.bounded[Int](n * 2).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.bounded[Int](n * 2).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -221,8 +220,8 @@ object THubSpec extends ZIOBaseSpec {
         test("one to one") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise <- Promise.make[Nothing, Unit]
-              hub     <- THub.dropping[Int](n).commit
+              promise    <- Promise.make[Nothing, Unit]
+              hub        <- THub.dropping[Int](n).commit
               subscriber <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -238,9 +237,9 @@ object THubSpec extends ZIOBaseSpec {
         test("one to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.dropping[Int](n).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.dropping[Int](n).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -265,9 +264,9 @@ object THubSpec extends ZIOBaseSpec {
         test("many to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.dropping[Int](n * 2).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.dropping[Int](n * 2).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -297,8 +296,8 @@ object THubSpec extends ZIOBaseSpec {
         test("one to one") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise <- Promise.make[Nothing, Unit]
-              hub     <- THub.sliding[Int](n).commit
+              promise    <- Promise.make[Nothing, Unit]
+              hub        <- THub.sliding[Int](n).commit
               subscriber <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -315,9 +314,9 @@ object THubSpec extends ZIOBaseSpec {
         test("one to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.sliding[Int](n).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.sliding[Int](n).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -342,9 +341,9 @@ object THubSpec extends ZIOBaseSpec {
         test("many to many") {
           check(smallInt, Gen.listOf(smallInt)) { (n, as) =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.sliding[Int](n * 2).commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.sliding[Int](n * 2).commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -374,8 +373,8 @@ object THubSpec extends ZIOBaseSpec {
         test("one to one") {
           check(Gen.listOf(smallInt)) { as =>
             for {
-              promise <- Promise.make[Nothing, Unit]
-              hub     <- THub.unbounded[Int].commit
+              promise    <- Promise.make[Nothing, Unit]
+              hub        <- THub.unbounded[Int].commit
               subscriber <-
                 hub.subscribe.commit.flatMap { subscription =>
                   promise.succeed(()) *> ZIO.foreach(as)(_ => subscription.take.commit)
@@ -389,9 +388,9 @@ object THubSpec extends ZIOBaseSpec {
         test("one to many") {
           check(Gen.listOf(smallInt)) { as =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.unbounded[Int].commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.unbounded[Int].commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>
@@ -416,9 +415,9 @@ object THubSpec extends ZIOBaseSpec {
         test("many to many") {
           check(Gen.listOf(smallInt)) { as =>
             for {
-              promise1 <- Promise.make[Nothing, Unit]
-              promise2 <- Promise.make[Nothing, Unit]
-              hub      <- THub.unbounded[Int].commit
+              promise1    <- Promise.make[Nothing, Unit]
+              promise2    <- Promise.make[Nothing, Unit]
+              hub         <- THub.unbounded[Int].commit
               subscriber1 <-
                 ZIO.scoped {
                   hub.subscribeScoped.flatMap { subscription =>

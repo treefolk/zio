@@ -29,7 +29,7 @@ package object sbt {
     def loop(s: String, i: Int, color: Option[String]): String =
       if (i >= s.length) s
       else {
-        val s1 = s.slice(i, i + 5)
+        val s1      = s.slice(i, i + 5)
         val isColor = s1 == Console.BLUE ||
           s1 == Console.CYAN ||
           s1 == Console.GREEN ||

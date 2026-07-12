@@ -54,7 +54,7 @@ object TArraySpec extends ZIOBaseSpec {
       } @@ zioTag(errors),
       test("is atomic") {
         for {
-          tArray <- makeStairWithHoles(N).commit
+          tArray    <- makeStairWithHoles(N).commit
           findFiber <- tArray.collectFirst {
                          case Some(i) if (i % largePrime) == 0 => i.toString
                        }.commit.fork
@@ -90,7 +90,7 @@ object TArraySpec extends ZIOBaseSpec {
       } @@ zioTag(errors),
       test("is atomic") {
         for {
-          tArray <- makeStairWithHoles(N).commit
+          tArray    <- makeStairWithHoles(N).commit
           findFiber <- tArray.collectFirstSTM {
                          case Some(i) if (i % largePrime) == 0 => STM.succeed(i.toString)
                        }.commit.fork
@@ -745,7 +745,7 @@ object TArraySpec extends ZIOBaseSpec {
         for {
           arr         <- TArray.fromIterable(list).commit
           transactions = new AtomicInteger(0)
-          _ <- ZIO
+          _           <- ZIO
                  .foreachParDiscard(0 until n) { i =>
                    (for {
                      _ <- arr.update(i, _ + 1)

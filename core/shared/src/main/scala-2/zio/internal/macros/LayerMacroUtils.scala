@@ -42,7 +42,7 @@ private[zio] trait LayerMacroUtils {
     provideMethod: ProvideMethod
   ): Expr[ZLayer[R0, E, R]] = {
     verifyLayers(layers)
-    val debug = typeOf[ZLayer.Debug.type].termSymbol
+    val debug                                              = typeOf[ZLayer.Debug.type].termSymbol
     val debugMap: PartialFunction[LayerExpr, ZLayer.Debug] = {
       case Expr(q"$prefix.tree") if prefix.symbol == debug    => ZLayer.Debug.Tree
       case Expr(q"$prefix.mermaid") if prefix.symbol == debug => ZLayer.Debug.Mermaid

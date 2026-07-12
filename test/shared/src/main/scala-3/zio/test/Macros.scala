@@ -41,13 +41,15 @@ object SmartAssertMacros {
   }
 
   object MethodCall {
-    def unapply(using Quotes)(
+    def unapply(using
+      Quotes
+    )(
       tree: quotes.reflect.Term
     ): Option[(quotes.reflect.Term, String, List[quotes.reflect.TypeRepr], Option[List[quotes.reflect.Term]])] = {
       import quotes.reflect._
       tree match {
-        case Select(lhs, name)                  => Some((lhs, name, List.empty, None))
-        case TypeApply(Select(lhs, name), tpes) => Some((lhs, name, tpes.map(_.tpe), None))
+        case Select(lhs, name)                                                            => Some((lhs, name, List.empty, None))
+        case TypeApply(Select(lhs, name), tpes)                                           => Some((lhs, name, tpes.map(_.tpe), None))
         case Apply(select @ Select(lhs, name), args) if !select.symbol.isClassConstructor =>
           Some((lhs, name, List.empty, Some(args)))
         case Apply(TypeApply(select @ Select(lhs, name), tpes), args) if !select.symbol.isClassConstructor =>
@@ -352,7 +354,7 @@ object SmartAssertMacros {
               catch {
                 case _: AssertionError =>
                   def getFieldOrMethod(tpe: TypeRepr, owner: Tree): Select = {
-                    val s = tpe.typeSymbol
+                    val s      = tpe.typeSymbol
                     val member = s.fieldMembers
                       .find(f => f.name == name)
                       .orElse(s.methodMember(name).filter(_.declarations.nonEmpty).headOption)

@@ -312,7 +312,7 @@ package object test extends CompileVariants {
     ): ZIO[R, TestFailure[E], TestSuccess] =
       for {
         promise <- Promise.make[TestFailure[E], TestSuccess]
-        child <- ZIO
+        child   <- ZIO
                    .suspendSucceed(assertion)
                    .foldCauseZIO(
                      cause =>
@@ -330,18 +330,17 @@ package object test extends CompileVariants {
                    .forkDaemon
         result <- promise.await
         _      <- child.inheritAll
-        _ <- ZIO.whenDiscard(child.isAlive()) {
+        _      <- ZIO.whenDiscard(child.isAlive()) {
                for {
-                 fiber <- ZIO
-                            .logWarning({
-                              val quotedLabel = "\"" + label + "\""
-                              s"Warning: ZIO Test is attempting to interrupt fiber " +
-                                s"${child.id} forked in test $quotedLabel due to automatic, " +
-                                "supervision, but interruption has taken more than 10 " +
-                                "seconds to complete. This may indicate a resource leak. " +
-                                "Make sure you are not forking a fiber in an " +
-                                "uninterruptible region."
-                            })
+                 fiber <- ZIO.logWarning {
+                            val quotedLabel = "\"" + label + "\""
+                            s"Warning: ZIO Test is attempting to interrupt fiber " +
+                              s"${child.id} forked in test $quotedLabel due to automatic, " +
+                              "supervision, but interruption has taken more than 10 " +
+                              "seconds to complete. This may indicate a resource leak. " +
+                              "Make sure you are not forking a fiber in an " +
+                              "uninterruptible region."
+                          }
                             .delay(10.seconds)
                             .withClock(Clock.ClockLive)
                             .interruptible

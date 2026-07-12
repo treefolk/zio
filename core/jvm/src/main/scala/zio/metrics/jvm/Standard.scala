@@ -28,7 +28,7 @@ object Standard {
     def get(implicit trace: Trace, unsafe: Unsafe): Task[Long] =
       method match {
         case Some(getter) => ZIO.attempt(getter.invoke(obj).asInstanceOf[Long])
-        case None =>
+        case None         =>
           ZIO.fail(new IllegalStateException(s"MXReflection#get called on unavailable metri"))
       }
 
@@ -88,14 +88,14 @@ object Standard {
   val live: ZLayer[JvmMetricsSchedule, Throwable, Standard] =
     ZLayer.scoped {
       for {
-        runtimeMXBean         <- ZIO.attempt(ManagementFactory.getRuntimeMXBean)
-        operatingSystemMXBean <- ZIO.attempt(ManagementFactory.getOperatingSystemMXBean)
-        getProcessCpuTime      = new MXReflection("getProcessCpuTime", operatingSystemMXBean)
+        runtimeMXBean             <- ZIO.attempt(ManagementFactory.getRuntimeMXBean)
+        operatingSystemMXBean     <- ZIO.attempt(ManagementFactory.getOperatingSystemMXBean)
+        getProcessCpuTime          = new MXReflection("getProcessCpuTime", operatingSystemMXBean)
         getOpenFileDescriptorCount =
           new MXReflection("getOpenFileDescriptorCount", operatingSystemMXBean)
         getMaxFileDescriptorCount =
           new MXReflection("getMaxFileDescriptorCount", operatingSystemMXBean)
-        isLinux <- ZIO.attempt(operatingSystemMXBean.getName.indexOf("Linux") == 0)
+        isLinux        <- ZIO.attempt(operatingSystemMXBean.getName.indexOf("Linux") == 0)
         cpuSecondsTotal =
           PollingMetric(
             Metric.gauge("process_cpu_seconds_total").contramap[Long](_.toDouble / 1.0e09),
@@ -130,7 +130,7 @@ object Standard {
         _        <- processStartTime.launch(schedule.updateMetrics)
         _        <- openFdCount.launch(schedule.updateMetrics).when(getOpenFileDescriptorCount.isAvailable)
         _        <- maxFdCount.launch(schedule.updateMetrics).when(getMaxFileDescriptorCount.isAvailable)
-        _ <-
+        _        <-
           collectMemoryMetricsLinux(virtualMemorySize, residentMemorySize)
             .scheduleFork(schedule.updateMetrics)
             .when(isLinux)

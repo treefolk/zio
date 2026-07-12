@@ -37,7 +37,7 @@ private[zio] trait ClockPlatformSpecific {
 
     def schedule(task: Runnable, duration: Duration)(implicit unsafe: Unsafe): CancelToken =
       (duration: @unchecked) match {
-        case Duration.Infinity => ConstFalse
+        case Duration.Infinity             => ConstFalse
         case d if d.isZero || d.isNegative =>
           task.run()
           ConstFalse

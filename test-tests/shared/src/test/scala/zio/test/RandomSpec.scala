@@ -167,7 +167,7 @@ object RandomSpec extends ZIOBaseSpec {
         testRandom <- TestRandom.makeTest(DefaultData)
         _          <- testRandom.setSeed(seed)
         actual     <- ZIO.foreach(List.range(0, 100))(testRandom.nextBytes(_))
-        expected <- ZIO.succeed(List.range(0, 100).map(new Array[Byte](_)).map { arr =>
+        expected   <- ZIO.succeed(List.range(0, 100).map(new Array[Byte](_)).map { arr =>
                       sRandom.nextBytes(arr)
                       Chunk.fromArray(arr)
                     })

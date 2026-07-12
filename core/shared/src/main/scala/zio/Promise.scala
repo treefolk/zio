@@ -48,7 +48,7 @@ final class Promise[E, A] private (blockingOn: FiberId) extends Serializable {
     ZIO.suspendSucceed {
       state.get match {
         case Done(value) => value
-        case pending =>
+        case pending     =>
           ZIO.asyncInterrupt[Any, E, A](
             k => {
               @annotation.tailrec
@@ -246,15 +246,15 @@ object Promise {
   private[zio] object internal {
     sealed abstract class State[E, A]            extends Serializable
     final case class Done[E, A](value: IO[E, A]) extends State[E, A]
-    sealed abstract class Pending[E, A] extends State[E, A] { self =>
+    sealed abstract class Pending[E, A]          extends State[E, A] { self =>
       def complete(io: IO[E, A]): Unit
       def add(waiter: IO[E, A] => Any): Pending[E, A]
       def remove(waiter: IO[E, A] => Any): Pending[E, A]
       def size: Int
     }
     private case object Empty extends Pending[Nothing, Nothing] { self =>
-      override def complete(io: IO[Nothing, Nothing]): Unit = ()
-      def size                                              = 0
+      override def complete(io: IO[Nothing, Nothing]): Unit                   = ()
+      def size                                                                = 0
       def add(waiter: IO[Nothing, Nothing] => Any): Pending[Nothing, Nothing] =
         new Link[Nothing, Nothing](waiter, self) {
           override def size = 1

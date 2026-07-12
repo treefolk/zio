@@ -17,7 +17,7 @@ case class PersistentUserRepo(ds: DataSource) extends UserRepo {
   override def register(user: User): Task[String] = {
     for {
       id <- Random.nextUUID
-      _ <- ctx.run {
+      _  <- ctx.run {
              quote {
                query[UserTable].insertValue {
                  lift(UserTable(id, user.name, user.age))

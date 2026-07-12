@@ -169,7 +169,7 @@ object PromiseSpec extends ZIOBaseSpec {
           var fired    = 0
           val cb       = (_: IO[Nothing, Unit]) => ()
           val toRemove = (_: IO[Nothing, Unit]) => fired += 1
-          val state =
+          val state    =
             (0 until n).foldLeft(empty[Nothing, Unit])((acc, i) => if (i < 5) acc.add(cb) else acc.add(toRemove))
           val removed = state.remove(toRemove)
           removed.complete(ZIO.unit)

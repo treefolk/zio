@@ -226,7 +226,7 @@ object ChunkSpec extends ZIOBaseSpec {
       }
     ),
     test("corresponds") {
-      val genChunk = smallChunks(intGen)
+      val genChunk    = smallChunks(intGen)
       val genFunction =
         Gen.function[Any, (Int, Int), Boolean](Gen.boolean).map(Function.untupled(_))
       check(genChunk, genChunk, genFunction) { (as, bs, f) =>
@@ -286,7 +286,7 @@ object ChunkSpec extends ZIOBaseSpec {
       test("mapAccumZIO happy path") {
         check(smallChunks(Gen.int), smallChunks(Gen.int), Gen.int, Gen.function2(Gen.int <*> Gen.int)) {
           (left, right, s, f) =>
-            val actual = (left ++ right).mapAccumZIO[Any, Nothing, Int, Int](s)((s, a) => ZIO.succeed(f(s, a)))
+            val actual   = (left ++ right).mapAccumZIO[Any, Nothing, Int, Int](s)((s, a) => ZIO.succeed(f(s, a)))
             val expected = (left ++ right).foldLeft[(Int, Chunk[Int])]((s, Chunk.empty)) { case ((s0, bs), a) =>
               val (s1, b) = f(s0, a)
               (s1, bs :+ b)
@@ -544,7 +544,7 @@ object ChunkSpec extends ZIOBaseSpec {
     },
     test("toArrayOnConcatOfSlice") {
       val onlyOdd: Int => Boolean = _ % 2 != 0
-      val concat = Chunk(1, 1, 1).filter(onlyOdd) ++
+      val concat                  = Chunk(1, 1, 1).filter(onlyOdd) ++
         Chunk(2, 2, 2).filter(onlyOdd) ++
         Chunk(3, 3, 3).filter(onlyOdd)
 
@@ -625,14 +625,14 @@ object ChunkSpec extends ZIOBaseSpec {
       assert(as.toArray)(equalTo(Array.range(0, n)))
     },
     test("stack safety concat and append") {
-      val n = 100000
+      val n  = 100000
       val as = List.range(0, n).foldRight[Chunk[Int]](Chunk.empty) { (a, as) =>
         if (a % 2 == 0) as :+ a else as ++ Chunk(a)
       }
       assert(as.toArray)(equalTo(Array.range(0, n).reverse))
     },
     test("stack safety concat and prepend") {
-      val n = 100000
+      val n  = 100000
       val as = List.range(0, n).foldRight[Chunk[Int]](Chunk.empty) { (a, as) =>
         if (a % 2 == 0) a +: as else Chunk(a) ++ as
       }
@@ -708,7 +708,7 @@ object ChunkSpec extends ZIOBaseSpec {
     },
     suite("unapplySeq")(
       test("matches a nonempty chunk") {
-        val chunk = Chunk(1, 2, 3)
+        val chunk  = Chunk(1, 2, 3)
         val actual = chunk match {
           case Chunk(x, y, z) => Some((x, y, z))
           case _              => None
@@ -717,7 +717,7 @@ object ChunkSpec extends ZIOBaseSpec {
         assert(actual)(equalTo(expected))
       },
       test("matches an empty chunk") {
-        val chunk = Chunk.empty
+        val chunk  = Chunk.empty
         val actual = chunk match {
           case Chunk() => Some(())
           case _       => None

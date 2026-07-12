@@ -32,7 +32,7 @@ object ThreadLocalBridgeSpec extends ZIOBaseSpec {
             beforeModify <- threadLocalGet
             _            <- fiberRef.modify(_ => () -> newValue1)
             afterModify  <- threadLocalGet
-            ab <-
+            ab           <-
               (fiberRef.set(newValue2) *> threadLocalGet) zipPar
                 threadLocalGet
             (a, b) = ab
@@ -53,7 +53,7 @@ object ThreadLocalBridgeSpec extends ZIOBaseSpec {
         val newValue2    = s"new-value2-$tag"
         tracking(initialValue) { (fiberRef, threadLocalGet) =>
           for {
-            a <- threadLocalGet
+            a  <- threadLocalGet
             bc <- fiberRef.locally(newValue1) {
                     threadLocalGet zipPar
                       fiberRef.locally(newValue2)(threadLocalGet)

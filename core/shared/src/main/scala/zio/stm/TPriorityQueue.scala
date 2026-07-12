@@ -105,7 +105,7 @@ final class TPriorityQueue[A] private (private val ref: TRef[SortedMap[A, ::[A]]
     ZSTM.Effect { (journal, _, _) =>
       val map = ref.unsafeGet(journal)
       map.headOption match {
-        case None => throw ZSTM.RetryException
+        case None          => throw ZSTM.RetryException
         case Some((a, as)) =>
           ref.unsafeSet(
             journal,
@@ -158,7 +158,7 @@ final class TPriorityQueue[A] private (private val ref: TRef[SortedMap[A, ::[A]]
     ZSTM.Effect { (journal, _, _) =>
       val map = ref.unsafeGet(journal)
       map.headOption match {
-        case None => None
+        case None          => None
         case Some((a, as)) =>
           ref.unsafeSet(
             journal,

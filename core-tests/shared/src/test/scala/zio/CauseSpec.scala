@@ -335,7 +335,7 @@ object CauseSpec extends ZIOBaseSpec {
         val c123 = Cause.Both(c1, c23)
 
         val bldr = Seq.newBuilder[(Seq[String], Boolean)]
-        val c = c123.filter { c =>
+        val c    = c123.filter { c =>
           val res = !c.isInstanceOf[Cause.Both[?]]
           bldr += (c.failures -> res)
           res

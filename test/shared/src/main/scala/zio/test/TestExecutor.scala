@@ -48,7 +48,7 @@ object TestExecutor {
         (for {
           sink     <- ZIO.service[ExecutionEventSink]
           topParent = SuiteId.global
-          _ <- {
+          _        <- {
             def processEvent(event: ExecutionEvent) =
               sink.process(event) *> eventHandlerZ.handle(event)
 
@@ -75,12 +75,12 @@ object TestExecutor {
                           timeout <- overrideShutdownTimeout.get.map(_.getOrElse(60.seconds))
                           warning <-
                             ZIO
-                              .logWarning({
+                              .logWarning(
                                 "Warning: ZIO Test is attempting to close the scope of suite " +
                                   s"${labels.reverse.mkString(" - ")} in $fullyQualifiedName, " +
                                   s"but closing the scope has taken more than ${timeout.toSeconds} seconds to " +
                                   "complete. This may indicate a resource leak."
-                              })
+                              )
                               .delay(timeout)
                               .withClock(ClockLive)
                               .interruptible
@@ -105,7 +105,7 @@ object TestExecutor {
                       start              = ExecutionEvent.SectionStart(labels, newMultiSectionId, newAncestors)
                       _                 <- processEvent(start)
                       end                = ExecutionEvent.SectionEnd(labels, newMultiSectionId, newAncestors)
-                      _ <-
+                      _                 <-
                         restore(
                           ZIO.foreachExec(specs)(exec)(spec =>
                             loop(labels, spec, exec, newAncestors, newMultiSectionId)
@@ -133,7 +133,7 @@ object TestExecutor {
                       )
                     result  <- Live.withLive(test)(_.timed).either
                     duration = result.map(_._1.toMillis).fold(_ => 1L, identity)
-                    event =
+                    event    =
                       ExecutionEvent
                         .Test(
                           labels,

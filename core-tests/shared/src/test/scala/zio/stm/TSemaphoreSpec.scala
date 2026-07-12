@@ -104,7 +104,7 @@ object TSemaphoreSpec extends ZIOBaseSpec {
       test("withPermitsBetween returns the number of permits allotted") {
         val maxPermits = 2L
         for {
-          semaphore <- TSemaphore.make(maxPermits).commit
+          semaphore                  <- TSemaphore.make(maxPermits).commit
           actualAndRemainingInEffect <-
             semaphore.withPermitsBetween(0L, 5L) { (actual: Long) =>
               for (remainingInEffect <- semaphore.available.commit) yield {

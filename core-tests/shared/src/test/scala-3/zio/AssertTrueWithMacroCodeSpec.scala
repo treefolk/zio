@@ -26,7 +26,7 @@ object AssertTrueWithMacroCodeSpec extends ZIOBaseSpec {
   private def collectSpans(arrow: TestArrow[Any, ?]) = {
     def recurse(accumulator: List[Span], stack: List[TestArrow[Any, ?]]): List[Span] =
       stack match {
-        case Nil => accumulator
+        case Nil          => accumulator
         case head :: next =>
           head match {
             case Meta(arrow, span, parentSpan, code, location, completeCode, customLabel, genFailureDetails) =>

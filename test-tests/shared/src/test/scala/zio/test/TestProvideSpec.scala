@@ -15,7 +15,7 @@ object TestProvideSpec extends ZIOBaseSpec {
         suite("meta-suite") {
           val doubleLayer = ZLayer.succeed(100.1)
           val stringLayer = ZLayer.succeed("this string is 28 chars long")
-          val intLayer =
+          val intLayer    =
             ZLayer {
               for {
                 str    <- ZIO.service[String]
@@ -67,7 +67,7 @@ object TestProvideSpec extends ZIOBaseSpec {
         test("reports missing top-level dependencies") {
           val program: URIO[String with Int, String] = ZIO.succeed("test")
           val _                                      = program
-          val checked =
+          val checked                                =
             typeCheck("""test("foo")(assertZIO(program)(anything)).provide(ZLayer.succeed(3))""")
           assertZIO(checked)(isLeft(containsStringWithoutAnsi("String")))
         } @@ TestAspect.exceptScala3,
@@ -161,7 +161,7 @@ object TestProvideSpec extends ZIOBaseSpec {
           val appendBang: ZIO[StringService, Nothing, String] =
             ZIO.serviceWithZIO[StringService](_.append("!"))
 
-          val intService: ULayer[IntService] = ZLayer(Ref.make(0).map(IntService(_)))
+          val intService: ULayer[IntService]       = ZLayer(Ref.make(0).map(IntService(_)))
           val stringService: ULayer[StringService] =
             ZLayer(Ref.make("Hello").map(StringService(_)))
 
@@ -238,13 +238,13 @@ object TestProvideSpec extends ZIOBaseSpec {
       })
     }
 
-    trait Fly {}
+    trait Fly  {}
     object Fly {
       def live: URLayer[Spider, Fly]          = ZLayer.succeed(new Fly {})
       def manEatingFly: URLayer[OldLady, Fly] = ZLayer.succeed(new Fly {})
     }
 
-    trait Spider {}
+    trait Spider  {}
     object Spider {
       def live: ULayer[Spider] = ZLayer.succeed(new Spider {})
     }

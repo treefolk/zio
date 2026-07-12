@@ -12,8 +12,8 @@ sealed abstract class LayerTree[+A] extends Product with Serializable { self =>
     if (self eq Empty) that else if (that eq Empty) self else ComposeH(self, that)
 
   def fold[B](z: B, value: A => B, composeH: (B, B) => B, composeV: (B, B) => B): B = self match {
-    case Empty         => z
-    case Value(value0) => value(value0)
+    case Empty                 => z
+    case Value(value0)         => value(value0)
     case ComposeH(left, right) =>
       composeH(left.fold(z, value, composeH, composeV), right.fold(z, value, composeH, composeV))
     case ComposeV(left, right) =>

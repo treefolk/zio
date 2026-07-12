@@ -73,7 +73,7 @@ private[test] object TestOutput {
         suiteIsPrinting <-
           reporters.attemptToGetPrintingControl(end.id, end.ancestors)
         sectionOutput <- getAndRemoveSectionOutput(end.id).map(_ :+ end)
-        _ <-
+        _             <-
           if (suiteIsPrinting)
             print(sectionOutput)
           else {
@@ -93,8 +93,8 @@ private[test] object TestOutput {
       end: ExecutionEvent.TopLevelFlush
     ): ZIO[Any, Nothing, Unit] =
       for {
-        sectionOutput <- getAndRemoveSectionOutput(end.id)
-        _             <- appendToSectionContents(SuiteId.global, sectionOutput)
+        sectionOutput   <- getAndRemoveSectionOutput(end.id)
+        _               <- appendToSectionContents(SuiteId.global, sectionOutput)
         suiteIsPrinting <-
           reporters.attemptToGetPrintingControl(SuiteId.global, List.empty)
         _ <-
@@ -113,8 +113,8 @@ private[test] object TestOutput {
       reporterEvent: ExecutionEvent
     ): ZIO[Any, Nothing, Unit] =
       for {
-        _ <- ZIO.when(debug)(TestDebug.print(reporterEvent, lock))
-        _ <- appendToSectionContents(reporterEvent.id, Chunk(reporterEvent))
+        _               <- ZIO.when(debug)(TestDebug.print(reporterEvent, lock))
+        _               <- appendToSectionContents(reporterEvent.id, Chunk(reporterEvent))
         suiteIsPrinting <- reporters.attemptToGetPrintingControl(
                              reporterEvent.id,
                              reporterEvent.ancestors
