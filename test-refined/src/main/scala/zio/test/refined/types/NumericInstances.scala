@@ -28,7 +28,7 @@ trait NumericInstances {
   val nonNegBigIntGen: Gen[Any, NonNegBigInt] = Gen.bigInt(0, Long.MaxValue).map(Refined.unsafeApply)
   val negBigIntGen: Gen[Any, NegBigInt]       = Gen.bigInt(Long.MinValue, -1).map(Refined.unsafeApply)
   val nonPosBigIntGen: Gen[Any, NonPosBigInt] = Gen.bigInt(Long.MinValue, 0).map(Refined.unsafeApply)
-  val posFloatGen: Gen[Any, PosFloat] = Gen
+  val posFloatGen: Gen[Any, PosFloat]         = Gen
     .double(1, Float.MaxValue.toDouble)
     .map(v => Refined.unsafeApply(v.toFloat))
   val nonNegFloatGen: Gen[Any, NonNegFloat] = Gen
@@ -40,14 +40,14 @@ trait NumericInstances {
   val nonPosFloatGen: Gen[Any, NonPosFloat] = Gen
     .double(Float.MinValue.toDouble, 0)
     .map(v => Refined.unsafeApply(v.toFloat))
-  val posDoubleGen: Gen[Any, PosDouble]         = Gen.double(1, Double.MaxValue).map(Refined.unsafeApply)
-  val nonNegDoubleGen: Gen[Any, NonNegDouble]   = Gen.double(0, Double.MaxValue).map(Refined.unsafeApply)
-  val negDoubleGen: Gen[Any, NegDouble]         = Gen.double(Double.MinValue, -1).map(Refined.unsafeApply)
-  val nonPosDoubleGen: Gen[Any, NonPosDouble]   = Gen.double(Double.MinValue, 0).map(Refined.unsafeApply)
-  val posBigDecimalGen: Gen[Any, PosBigDecimal] = Gen.bigDecimal(1, Double.MaxValue).map(Refined.unsafeApply)
+  val posDoubleGen: Gen[Any, PosDouble]               = Gen.double(1, Double.MaxValue).map(Refined.unsafeApply)
+  val nonNegDoubleGen: Gen[Any, NonNegDouble]         = Gen.double(0, Double.MaxValue).map(Refined.unsafeApply)
+  val negDoubleGen: Gen[Any, NegDouble]               = Gen.double(Double.MinValue, -1).map(Refined.unsafeApply)
+  val nonPosDoubleGen: Gen[Any, NonPosDouble]         = Gen.double(Double.MinValue, 0).map(Refined.unsafeApply)
+  val posBigDecimalGen: Gen[Any, PosBigDecimal]       = Gen.bigDecimal(1, Double.MaxValue).map(Refined.unsafeApply)
   val nonNegBigDecimalGen: Gen[Any, NonNegBigDecimal] =
     Gen.bigDecimal(0, Double.MaxValue).map(Refined.unsafeApply)
-  val negBigDecimalGen: Gen[Any, NegBigDecimal] = Gen.bigDecimal(Double.MinValue, -1).map(Refined.unsafeApply)
+  val negBigDecimalGen: Gen[Any, NegBigDecimal]       = Gen.bigDecimal(Double.MinValue, -1).map(Refined.unsafeApply)
   val nonPosBigDecimalGen: Gen[Any, NonPosBigDecimal] =
     Gen.bigDecimal(Double.MinValue, 0).map(Refined.unsafeApply)
   val nonNanFloatGen: Gen[Any, NonNaNFloat]   = Gen.float.map(Refined.unsafeApply)

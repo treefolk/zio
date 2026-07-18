@@ -199,7 +199,7 @@ object SmartAssertions {
       .make[Seq[A], A] { as =>
         Try(as(index)).toOption match {
           case Some(value) => TestTrace.succeed(value)
-          case None =>
+          case None        =>
             TestTrace.fail(
               M.text("Invalid index") + M.value(index) + "for" + className(as) + "of size" + M.value(as.length)
             )
@@ -217,7 +217,7 @@ object SmartAssertions {
       .make[Map[K, V], V] { mapKV =>
         Try(mapKV(key)).toOption match {
           case Some(value) => TestTrace.succeed(value)
-          case None =>
+          case None        =>
             TestTrace.fail(
               M.text("Missing key") + M.pretty(key)
             )
@@ -229,7 +229,7 @@ object SmartAssertions {
       .make[Iterable[A], A] { as =>
         as.headOption match {
           case Some(value) => TestTrace.succeed(value)
-          case None =>
+          case None        =>
             TestTrace.fail(className(as) + "was empty")
         }
       }
@@ -537,7 +537,7 @@ object SmartAssertions {
       .make[A, B] { a =>
         CB.unapply(a) match {
           case Some(value) => TestTrace.succeed(value)
-          case None =>
+          case None        =>
             TestTrace.fail(M.value(a.getClass.getSimpleName) + "is not an instance of" + M.value(className(CB)))
         }
       }

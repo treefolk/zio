@@ -28,7 +28,7 @@ class InternalMacros(val c: blackbox.Context) {
     case t                       => List(t)
   }
 
-  private val badTypes = Set(c.weakTypeOf[AnyRef], c.weakTypeOf[Any], c.weakTypeOf[Object])
+  private val badTypes                   = Set(c.weakTypeOf[AnyRef], c.weakTypeOf[Any], c.weakTypeOf[Object])
   def isIntersection(tpe: Type): Boolean =
     tpe.widen.dealias match {
       case tpe: RefinedType if flattenIntersection(tpe).filterNot(badTypes).distinct.length > 1 => true

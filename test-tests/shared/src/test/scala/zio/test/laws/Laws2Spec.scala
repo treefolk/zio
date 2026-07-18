@@ -19,11 +19,11 @@ object Laws2Spec extends ZIOBaseSpec {
   }
 
   object Equal {
-    implicit val byteEqual: Equal[Byte] = _ == _
-    implicit val charEqual: Equal[Char] = _ == _
+    implicit val byteEqual: Equal[Byte]              = _ == _
+    implicit val charEqual: Equal[Char]              = _ == _
     implicit def listEqual[A: Equal]: Equal[List[A]] =
       (l, r) => l.corresponds(r)(_ === _)
-    implicit val stringEqual: Equal[String] = _ == _
+    implicit val stringEqual: Equal[String]              = _ == _
     implicit def vectorEqual[A: Equal]: Equal[Vector[A]] =
       (l, r) => l.corresponds(r)(_ === _)
   }

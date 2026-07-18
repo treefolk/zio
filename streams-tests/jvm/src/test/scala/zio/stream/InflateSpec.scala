@@ -69,7 +69,7 @@ object InflateSpec extends ZIOBaseSpec {
           case (chunk, n, bufferSize) =>
             assertZIO(for {
               deflated <- ZIO.succeed(noWrapDeflatedStream(chunk.toArray))
-              out <-
+              out      <-
                 (deflated.rechunk(n).channel >>> makeInflater(bufferSize, noWrap = true)).runCollect.map(_._1.flatten)
             } yield out.toList)(equalTo(chunk))
         }

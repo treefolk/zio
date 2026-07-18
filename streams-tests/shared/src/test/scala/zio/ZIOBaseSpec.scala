@@ -16,8 +16,8 @@ trait ZIOBaseSpec extends ZIOSpecDefault {
     val subTags: List[ZIOTag] = Nil
   }
   object ZIOTag {
-    case object errors extends ZIOTag { override val value = "errors" }
-    case object future extends ZIOTag { override val value = "future" }
+    case object errors  extends ZIOTag { override val value = "errors" }
+    case object future  extends ZIOTag { override val value = "future" }
     case object interop extends ZIOTag {
       override val value                 = "interop"
       override val subTags: List[ZIOTag] = List(future)

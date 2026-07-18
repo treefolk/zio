@@ -18,7 +18,7 @@ object AutoWireSpec extends ZIOBaseSpec {
           test("automatically constructs a layer") {
             val doubleLayer = ZLayer.succeed(100.1)
             val stringLayer = ZLayer.succeed("this string is 28 chars long")
-            val intLayer =
+            val intLayer    =
               ZLayer.fromManaged {
                 for {
                   str    <- ZManaged.service[String]
@@ -39,7 +39,7 @@ object AutoWireSpec extends ZIOBaseSpec {
 
             (for {
               ref <- Ref.make(0).toManaged
-              _ <- (ZManaged.service[Int] <*> ZManaged.service[Boolean])
+              _   <- (ZManaged.service[Int] <*> ZManaged.service[Boolean])
                      .provide(layerA, layerB, sideEffectingLayer(ref))
               result <- ref.get.toManaged
             } yield assert(result)(equalTo(1))).useNow
@@ -107,7 +107,7 @@ object AutoWireSpec extends ZIOBaseSpec {
           test("automatically constructs a layer, leaving off ZEnv") {
             val stringLayer = ZLayer(Console.readLine.orDie)
             val program     = ZManaged.service[String].zipWith(Random.nextInt.toManaged)((str, int) => s"$str $int")
-            val provided = TestConsole.feedLines("Your Lucky Number is:").toManaged *>
+            val provided    = TestConsole.feedLines("Your Lucky Number is:").toManaged *>
               program.provide(stringLayer)
 
             assertZIO(provided.useNow)(equalTo("Your Lucky Number is: -1295463240"))
@@ -120,7 +120,7 @@ object AutoWireSpec extends ZIOBaseSpec {
 
             for {
               ref <- Ref.make(0)
-              _ <- ZIO
+              _   <- ZIO
                      .service[Int]
                      .provide(
                        sideEffectingLayer(ref).unit,
@@ -145,13 +145,13 @@ object AutoWireSpec extends ZIOBaseSpec {
       })
     }
 
-    trait Fly {}
+    trait Fly  {}
     object Fly {
       def live: URLayer[Spider, Fly]          = ZLayer.succeed(new Fly {})
       def manEatingFly: URLayer[OldLady, Fly] = ZLayer.succeed(new Fly {})
     }
 
-    trait Spider {}
+    trait Spider  {}
     object Spider {
       def live: ULayer[Spider] = ZLayer.succeed(new Spider {})
     }

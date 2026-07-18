@@ -815,7 +815,7 @@ sealed trait ZSTM[-R, +E, +A] extends Serializable { self =>
               val oldEnv = env
               env = provide.f(oldEnv)
 
-              val cleanup = ZSTM.succeed({ env = oldEnv })
+              val cleanup = ZSTM.succeed { env = oldEnv }
 
               curr = provide.effect.ensuring(cleanup)
 
@@ -901,7 +901,7 @@ object ZSTM {
     onCommit match {
       case Nil        => Exit.unit
       case one :: Nil => one
-      case many =>
+      case many       =>
         val it = many.reverseIterator
         ZIO.whileLoop(it.hasNext)(it.next())(_ => ())
     }
@@ -1166,8 +1166,7 @@ object ZSTM {
       val builder  = bf.newBuilder(in)
 
       def loop: ZSTM[R, E, Collection[B]] =
-        if (iterator.hasNext) f(iterator.next()).flatMap { b => builder += b; loop }
-        else ZSTM.succeed(builder.result())
+        if (iterator.hasNext) f(iterator.next()).flatMap { b => builder += b; loop } else ZSTM.succeed(builder.result())
 
       loop
     }
@@ -1796,7 +1795,7 @@ object ZSTM {
           val it    = map.iterator
           while (it.hasNext) {
             val (key, value) = it.next()
-            val resetValue = currentNewValues.getOrElse(key, null) match {
+            val resetValue   = currentNewValues.getOrElse(key, null) match {
               case null => value.expected
               case v    => v
             }
@@ -1971,7 +1970,7 @@ object ZSTM {
         case State.Done(exit, _)              => k(exit)
         case State.Interrupted                => k(Exit.interrupt(FiberId.None))
         case State.Running if journal ne null => exec(journal)
-        case State.Running =>
+        case State.Running                    =>
           tryCommitSync(fiberId, stm, state, r, executor) match {
             case TryCommit.Done(io, _)         => k(io)
             case TryCommit.Suspend(newJournal) => exec(newJournal)

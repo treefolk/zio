@@ -120,7 +120,7 @@ object TQueue {
             strategy match {
               case Strategy.BackPressure => throw ZSTM.RetryException
               case Strategy.Dropping     => false
-              case Strategy.Sliding =>
+              case Strategy.Sliding      =>
                 queue.dequeueOption match {
                   case Some((_, queue)) =>
                     ref.unsafeSet(journal, queue.enqueue(a))
@@ -140,7 +140,7 @@ object TQueue {
           } else
             strategy match {
               case Strategy.BackPressure => throw ZSTM.RetryException
-              case Strategy.Dropping =>
+              case Strategy.Dropping     =>
                 val forQueue = as.take(capacity - queue.size)
                 ref.unsafeSet(journal, queue ++ forQueue)
                 false

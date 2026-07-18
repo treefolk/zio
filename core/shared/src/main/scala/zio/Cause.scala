@@ -250,7 +250,7 @@ sealed abstract class Cause[+E] extends Product with Serializable { self =>
           loop(causes, Right(empty(context)) :: out)
         case Nil =>
           out.foldLeft[List[Z]](List.empty) {
-            case (acc, Right(causes)) => causes :: acc
+            case (acc, Right(causes))  => causes :: acc
             case (acc, Left(BothCase)) =>
               val left :: right :: causes = (acc: @unchecked)
               bothCase(context, left, right) :: causes
@@ -293,16 +293,16 @@ sealed abstract class Cause[+E] extends Product with Serializable { self =>
     interruptCase0: (FiberId, StackTrace, List[LogSpan], Map[String, String]) => Z
   )(thenCase0: (Z, Z) => Z, bothCase0: (Z, Z) => Z, stacklessCase0: (Z, Boolean) => Z): Z =
     foldContext[Unit, E, Z](())(new Cause.Folder[Unit, E, Z] {
-      def empty(u: Unit) = empty0
+      def empty(u: Unit)                                               = empty0
       def failCase(context: Unit, error: E, stackTrace: StackTrace): Z =
         failCase(context, error, stackTrace, List.empty, Map.empty)
       def dieCase(context: Unit, t: Throwable, stackTrace: StackTrace): Z =
         dieCase(context, t, stackTrace, List.empty, Map.empty)
       def interruptCase(context: Unit, fiberId: FiberId, stackTrace: StackTrace): Z =
         interruptCase(context, fiberId, stackTrace, List.empty, Map.empty)
-      def bothCase(u: Unit, a: Z, b: Z)            = bothCase0(a, b)
-      def thenCase(u: Unit, a: Z, b: Z)            = thenCase0(a, b)
-      def stacklessCase(u: Unit, a: Z, b: Boolean) = stacklessCase0(a, b)
+      def bothCase(u: Unit, a: Z, b: Z)                                                                               = bothCase0(a, b)
+      def thenCase(u: Unit, a: Z, b: Z)                                                                               = thenCase0(a, b)
+      def stacklessCase(u: Unit, a: Z, b: Boolean)                                                                    = stacklessCase0(a, b)
       override def failCase(u: Unit, e: E, trace: StackTrace, spans: List[LogSpan], annotations: Map[String, String]) =
         failCase0(e, trace, spans, annotations)
       override def dieCase(
@@ -354,7 +354,7 @@ sealed abstract class Cause[+E] extends Product with Serializable { self =>
         case Then(left, right)   => loop(left, right :: stack)
         case Both(left, right)   => loop(left, right :: stack)
         case Stackless(cause, _) => loop(cause, stack)
-        case _ =>
+        case _                   =>
           stack match {
             case hd :: tl => loop(hd, tl)
             case Nil      => true
@@ -510,7 +510,7 @@ sealed abstract class Cause[+E] extends Product with Serializable { self =>
   private[zio] final def prettyPrintWith(append: String => Unit)(implicit unsafe: Unsafe): Unit = {
     import Cause.Unified
 
-    var size = 0
+    var size                           = 0
     def appendLine(line: String): Unit =
       if (size <= 1024) {
         append(line)
@@ -711,7 +711,7 @@ sealed abstract class Cause[+E] extends Product with Serializable { self =>
       def unifyFail(fail: Cause.Fail[E]): List[Unified] =
         fail.value match {
           case throwable: Throwable => unifyThrowable(throwable, fail.trace)
-          case value =>
+          case value                =>
             val className = if (value == null) "" else value.getClass.getName
             val message   = if (value == null) "null" else value.toString
             List(Unified(fail.trace.fiberId, className, message, fail.trace.toJava))
@@ -735,7 +735,7 @@ sealed abstract class Cause[+E] extends Product with Serializable { self =>
         case Then(left, right) :: more           => loop(left :: right :: more, fiberId, stackless, result)
         case (cause @ Fail(_, _)) :: more        => loop(more, fiberId, stackless, unifyFail(cause) ::: result)
         case (cause @ Die(_, _)) :: more         => loop(more, fiberId, stackless, unifyDie(cause) ::: result)
-        case (cause @ Interrupt(_, _)) :: more =>
+        case (cause @ Interrupt(_, _)) :: more   =>
           loop(more, fiberId, stackless, unifyInterrupt(cause) :: result)
       }
     }
@@ -882,7 +882,7 @@ object Cause extends Serializable {
       def stacklessCase(context: Any, value: Cause[E], stackless: Boolean): Cause[E] =
         value match {
           case Cause.Empty => value
-          case _ =>
+          case _           =>
             val stackless2 = Stackless(value, stackless)
             if (p(stackless2))
               stackless2
@@ -1136,7 +1136,7 @@ object Cause extends Serializable {
         left match {
           case (_: Empty.type) => loop(right, stack, parallel, sequential)
           case Then(l, r)      => loop(Then(l, Then(r, right)), stack, parallel, sequential)
-          case Both(l, r) =>
+          case Both(l, r)      =>
             loop(Both(Then(l, right), Then(r, right)), stack, parallel, sequential)
           case Stackless(c, _) => loop(Then(c, right), stack, parallel, sequential)
           case o               => loop(o, stack, parallel, right :: sequential)

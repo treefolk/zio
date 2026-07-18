@@ -318,7 +318,7 @@ object Scope {
      */
     def releaseAll(exit: Exit[Any, Any], execStrategy: ExecutionStrategy)(implicit trace: Trace): UIO[Unit] =
       modify {
-        case s: Exited => (Exit.unit, s)
+        case s: Exited              => (Exit.unit, s)
         case Running(nextKey, fins) =>
           val finalizer =
             if (nextKey == State.firstKey || fins.isEmpty)

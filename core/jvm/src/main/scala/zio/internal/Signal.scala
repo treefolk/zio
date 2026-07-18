@@ -95,7 +95,7 @@ private object Signal {
 
       override def handle(signal: String, handler: Consumer[AnyRef]): Unit = {
         val invocationHandler = initInvocationHandler(handler)
-        val proxy = Proxy.newProxyInstance(
+        val proxy             = Proxy.newProxyInstance(
           Signal.getClass.getClassLoader,
           Array(signalHandlerClass),
           invocationHandler

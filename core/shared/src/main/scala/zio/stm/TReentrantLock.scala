@@ -121,7 +121,7 @@ final class TReentrantLock private (data: TRef[LockState]) {
   lazy val releaseWrite: USTM[Int] =
     ZSTM.Effect { (journal, fiberId, _) =>
       val res = data.unsafeGet(journal) match {
-        case WriteLock(1, m, `fiberId`) => ReadLock(fiberId, m)
+        case WriteLock(1, m, `fiberId`)          => ReadLock(fiberId, m)
         case WriteLock(n, m, `fiberId`) if n > 1 =>
           WriteLock(n - 1, m, fiberId)
         case s => die(s"Defect: Fiber $fiberId releasing write lock it does not hold: $s")

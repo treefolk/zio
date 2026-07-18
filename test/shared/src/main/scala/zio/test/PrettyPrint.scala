@@ -10,7 +10,7 @@ import zio.stacktracer.TracingImplicits.disableAutoTrace
  * console during tests back into runnable code.
  */
 private[zio] object PrettyPrint extends PrettyPrintVersionSpecific {
-  private val maxListLength = 10
+  private val maxListLength   = 10
   def apply(any: Any): String =
     any match {
       case nonEmptyChunk: NonEmptyChunk[_] =>
@@ -39,7 +39,7 @@ ${indent(body.mkString(",\n"))}
       case product: Product =>
         val name    = product.productPrefix
         val labels0 = labels(product)
-        val body = labels0
+        val body    = labels0
           .zip(product.productIterator)
           .map { case (key, value) =>
             s"${(key + " =").faint} ${PrettyPrint(value)}"

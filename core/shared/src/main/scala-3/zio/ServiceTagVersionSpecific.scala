@@ -19,8 +19,8 @@ private object TagMacros {
     def isContravariant(typeParam: Symbol) = typeParam.flags.is(Flags.Contravariant)
 
     def findIntersectionInCovariantPosition(tpe: TypeRepr, covariant: Boolean = true): Option[TypeRepr] = tpe match {
-      case AndType(_, _) => Option.when(covariant)(tpe)
-      case OrType(_, _)  => Option.unless(covariant)(tpe)
+      case AndType(_, _)                      => Option.when(covariant)(tpe)
+      case OrType(_, _)                       => Option.unless(covariant)(tpe)
       case AppliedType(constructor, typeArgs) =>
         val typeParams = constructor.typeSymbol.typeMembers.iterator.filter(_.isTypeParam)
         typeParams

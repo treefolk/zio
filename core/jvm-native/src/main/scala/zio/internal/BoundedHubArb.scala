@@ -349,7 +349,7 @@ private final class BoundedHubArb[A](requestedCapacity: Int) extends Hub[A] {
       def unsubscribe(): Unit =
         if (unsubscribed.compareAndSet(false, true)) {
           var currentSubscriberIndex = subscriberIndex.getAndAdd(Int.MaxValue)
-          val currentState =
+          val currentState           =
             state.getAndUpdate(currentState => currentState.copy(subscriberCount = currentState.subscriberCount - 1))
           val currentPublisherIndex = (currentState.publisherIndex).toInt
           while (currentSubscriberIndex != currentPublisherIndex) {

@@ -103,7 +103,7 @@ object RefSpec extends ZIOBaseSpec {
           ref    <- Ref.make[State](Active)
           _      <- ref.updateSome { case Active => Changed }
           value1 <- ref.get
-          _ <- ref.updateSomeAndGet {
+          _      <- ref.updateSomeAndGet {
                  case Active  => Changed
                  case Changed => Closed
                }

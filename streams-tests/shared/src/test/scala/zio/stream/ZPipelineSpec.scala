@@ -319,7 +319,7 @@ object ZPipelineSpec extends ZIOBaseSpec {
           val chunk = Chunk(1)
           for {
             collector <- Queue.unbounded[Int]
-            result <- ZStream
+            result    <- ZStream
                         .fromChunk(chunk)
                         .via(ZPipeline.mapEitherChunked(i => Left(i)))
                         .run(ZSink.fromQueue(collector))
@@ -342,7 +342,7 @@ object ZPipelineSpec extends ZIOBaseSpec {
           val chunk = Chunk.fromIterable(range)
           for {
             collector <- Queue.unbounded[Int]
-            result <- ZStream
+            result    <- ZStream
                         .fromChunk(chunk)
                         .via(ZPipeline.mapEitherChunked(i => if (i == 5) Left(i) else Right(i)))
                         .run(ZSink.fromQueue(collector))
@@ -374,7 +374,7 @@ object ZPipelineSpec extends ZIOBaseSpec {
           val chunk = Chunk.range(0, 10)
           for {
             collector <- Queue.unbounded[Int]
-            result <- ZStream
+            result    <- ZStream
                         .fromChunk(chunk)
                         .via(ZPipeline.mapChunksEither(_ => Left("this is an error")))
                         .run(ZSink.fromQueue(collector))

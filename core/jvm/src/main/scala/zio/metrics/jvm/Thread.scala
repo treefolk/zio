@@ -26,7 +26,7 @@ object Thread {
     for {
       allThreads <- ZIO.attempt(threadMXBean.getThreadInfo(threadMXBean.getAllThreadIds, 0))
       initial     = java.lang.Thread.State.values().map(_ -> 0L).toMap
-      result = allThreads.foldLeft(initial) { (result, thread) =>
+      result      = allThreads.foldLeft(initial) { (result, thread) =>
                  if (thread ne null) {
                    result.updated(thread.getThreadState, result(thread.getThreadState) + 1)
                  } else result
@@ -36,7 +36,7 @@ object Thread {
   private def refreshThreadStateCounts(threadMXBean: ThreadMXBean) =
     for {
       threadStateCounts <- getThreadStateCounts(threadMXBean)
-      _ <- ZIO.foreachDiscard(threadStateCounts) { case (state, count) =>
+      _                 <- ZIO.foreachDiscard(threadStateCounts) { case (state, count) =>
              threadsState(state).set(count)
            }
     } yield ()
@@ -44,7 +44,7 @@ object Thread {
   val live: ZLayer[JvmMetricsSchedule, Throwable, Thread] =
     ZLayer.scoped {
       for {
-        threadMXBean <- ZIO.attempt(ManagementFactory.getThreadMXBean)
+        threadMXBean  <- ZIO.attempt(ManagementFactory.getThreadMXBean)
         threadsCurrent =
           PollingMetric(
             Metric

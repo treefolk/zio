@@ -140,7 +140,7 @@ object TMapSpec extends ZIOBaseSpec {
     suite("transformations")(
       test("size") {
         val elems = List("a" -> 1, "b" -> 2)
-        val tx =
+        val tx    =
           for {
             tmap <- TMap.fromIterable(elems)
             size <- tmap.size
@@ -150,7 +150,7 @@ object TMapSpec extends ZIOBaseSpec {
       },
       test("toList") {
         val elems = List("a" -> 1, "b" -> 2)
-        val tx =
+        val tx    =
           for {
             tmap <- TMap.fromIterable(elems)
             list <- tmap.toList
@@ -160,7 +160,7 @@ object TMapSpec extends ZIOBaseSpec {
       },
       test("toChunk") {
         val elems = List("a" -> 1, "b" -> 2)
-        val tx =
+        val tx    =
           for {
             tmap  <- TMap.fromIterable(elems)
             chunk <- tmap.toChunk
@@ -170,7 +170,7 @@ object TMapSpec extends ZIOBaseSpec {
       },
       test("toMap") {
         val elems = Map("a" -> 1, "b" -> 2)
-        val tx =
+        val tx    =
           for {
             tmap <- TMap.fromIterable(elems)
             map  <- tmap.toMap
@@ -409,7 +409,7 @@ object TMapSpec extends ZIOBaseSpec {
         val n = 1000
         for {
           map <- TMap.empty[String, Int].commit
-          _ <- ZIO
+          _   <- ZIO
                  .foreachParDiscard(1 to n) { _ =>
                    ZIO.yieldNow *>
                      (for {

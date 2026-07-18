@@ -129,7 +129,7 @@ object TestArrowSpec extends ZIOBaseSpec {
           val genFailureDetails2 = Some(GenFailureDetails(None, None, 2))
           val meta               = createMeta(genFailureDetails = genFailureDetails1)
           val res1               = meta.meta(genFailureDetails = None).asInstanceOf[Meta[Any, Nothing]].genFailureDetails
-          val res2 =
+          val res2               =
             meta.meta(genFailureDetails = genFailureDetails2).asInstanceOf[Meta[Any, Nothing]].genFailureDetails
           assertTrue(res1.map(_.iterations == 1).getOrElse(false) && res2.map(_.iterations == 2).getOrElse(false))
         }

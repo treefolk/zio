@@ -193,7 +193,7 @@ trait Schedule[-Env, -In, +Out] extends Serializable { self =>
             }
           case (lState, out, Continue(interval)) =>
             that.step(now, out, state._2).map {
-              case (rState, out2, Done) => ((lState, rState), out2, Done)
+              case (rState, out2, Done)                => ((lState, rState), out2, Done)
               case (rState, out2, Continue(interval2)) =>
                 val combined = interval max interval2
 
@@ -304,7 +304,7 @@ trait Schedule[-Env, -In, +Out] extends Serializable { self =>
         trace: Trace
       ): ZIO[Env1, Nothing, (State, Out, Decision)] =
         self.step(now, in, state).flatMap {
-          case (state, out, Done) => ZIO.succeed((state, out, Done))
+          case (state, out, Done)               => ZIO.succeed((state, out, Done))
           case (state, out, Continue(interval)) =>
             test(in, out).map { b =>
               if (b) (state, out, Continue(interval)) else (state, out, Done)
@@ -486,7 +486,7 @@ trait Schedule[-Env, -In, +Out] extends Serializable { self =>
           state <- ref.get.map(_._2)
           now   <- Clock.currentDateTime
           dec   <- self.step(now, in, state)
-          v <- dec match {
+          v     <- dec match {
                  case (state, out, Done) =>
                    ref.set((Some(out), state)) *> Exit.failNone.asInstanceOf[Exit[None.type, Out]]
                  case (state, out, Continue(interval)) =>
@@ -733,7 +733,7 @@ trait Schedule[-Env, -In, +Out] extends Serializable { self =>
         trace: Trace
       ): ZIO[Env1, Nothing, (State, Out, Decision)] =
         self.step(now, in, state).flatMap {
-          case (state, out, Done) => ZIO.succeed((state, out, Done))
+          case (state, out, Done)               => ZIO.succeed((state, out, Done))
           case (state, out, Continue(interval)) =>
             val delay = Interval(now, interval.start).size
 
@@ -741,7 +741,7 @@ trait Schedule[-Env, -In, +Out] extends Serializable { self =>
               val oldStart = interval.start
               val newStart = now.plusNanos(duration.toNanos)
               val delta    = java.time.Duration.between(oldStart, newStart)
-              val newEnd =
+              val newEnd   =
                 if (interval.end == OffsetDateTime.MAX) OffsetDateTime.MAX
                 else
                   try { interval.end.plus(delta) }
@@ -906,7 +906,7 @@ trait Schedule[-Env, -In, +Out] extends Serializable { self =>
       acc: Chunk[Out]
     ): URIO[Env, Chunk[Out]] =
       xs match {
-        case Nil => ZIO.succeed(acc)
+        case Nil      => ZIO.succeed(acc)
         case in :: xs =>
           self.step(now, in, state).flatMap {
             case (_, out, Done)                   => ZIO.succeed(acc :+ out)
@@ -1230,7 +1230,7 @@ object Schedule {
       ): ZIO[Any, Nothing, (State, Duration, Decision)] =
         ZIO.succeed {
           state match {
-            case None => (Some(now), Duration.Zero, Decision.Continue(Interval(now, OffsetDateTime.MAX)))
+            case None        => (Some(now), Duration.Zero, Decision.Continue(Interval(now, OffsetDateTime.MAX)))
             case Some(start) =>
               val duration = Duration.fromInterval(start, now)
 

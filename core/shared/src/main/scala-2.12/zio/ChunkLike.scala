@@ -275,7 +275,7 @@ object ChunkLike {
   private def fromGenTraversableOnce[A](as: GenTraversableOnce[A]): Chunk[A] =
     as match {
       case iterable: Iterable[A] => Chunk.fromIterable(iterable)
-      case iterableOnce =>
+      case iterableOnce          =>
         val chunkBuilder = ChunkBuilder.make[A]()
         iterableOnce.foreach(chunkBuilder += _)
         chunkBuilder.result()

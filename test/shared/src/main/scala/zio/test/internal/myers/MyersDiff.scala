@@ -103,8 +103,8 @@ object MyersDiff {
 
   def diff[A](original: Chunk[A], modified: Chunk[A]): DiffResult[A] = {
 
-    var varOriginal = original
-    var varModified = modified
+    var varOriginal                      = original
+    var varModified                      = modified
     var longestCommonSubstring: Chunk[A] =
       getLongestCommonSubsequence(original, modified)
 

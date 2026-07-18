@@ -1012,7 +1012,7 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
       def decodeChunk(inBytes: Chunk[Byte]): IO[CharacterCodingException, Chunk[Char]] =
         for {
           remainingBytes <- ZIO.succeed {
-                              val bufRemaining = byteBuffer.remaining
+                              val bufRemaining                  = byteBuffer.remaining
                               val (decodeBytes, remainingBytes) =
                                 if (inBytes.length > bufRemaining)
                                   inBytes.splitAt(bufRemaining)
@@ -1043,13 +1043,13 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
 
       val push: Option[Chunk[Byte]] => IO[CharacterCodingException, Chunk[Char]] = {
         case Some(inChunk) => decodeChunk(inChunk)
-        case None =>
+        case None          =>
           for {
             _              <- ZIO.succeed(byteBuffer.flip())
             decodedChars   <- endOfInput
             remainingBytes <- flushRemaining
             result          = decodedChars ++ remainingBytes
-            _ <- ZIO.succeed {
+            _              <- ZIO.succeed {
                    byteBuffer.clear()
                    charBuffer.clear()
                  }
@@ -1205,7 +1205,7 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
       def encodeChunk(inChars: Chunk[Char]): IO[CharacterCodingException, Chunk[Byte]] =
         for {
           remainingChars <- ZIO.succeed {
-                              val bufRemaining = charBuffer.remaining()
+                              val bufRemaining                  = charBuffer.remaining()
                               val (decodeChars, remainingChars) =
                                 if (inChars.length > bufRemaining) {
                                   inChars.splitAt(bufRemaining)
@@ -1244,7 +1244,7 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
             encodedBytes   <- endOfInput
             remainingBytes <- flushRemaining
             result          = encodedBytes ++ remainingBytes
-            _ <- ZIO.succeed {
+            _              <- ZIO.succeed {
                    charBuffer.clear()
                    byteBuffer.clear()
                  }
@@ -1569,7 +1569,7 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
         if (toProcess.isEmpty) {
           ZChannel.unit
         } else {
-          val l = toProcess.size
+          val l              = toProcess.size
           val (cs, newSpare) = if (l % 2 == 0) {
             (toProcess, Chunk.empty[Char])
           } else {
@@ -1633,7 +1633,7 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
     ZPipeline.fromPush[Any, Nothing, Byte, Char](
       ZIO.succeed((inChunkOpt: Option[Chunk[Byte]]) =>
         inChunkOpt match {
-          case None => ZIO.succeed(Chunk.empty[Char])
+          case None     => ZIO.succeed(Chunk.empty[Char])
           case Some(bs) =>
             ZIO.succeed {
               val out = ChunkBuilder.make[Char](bs.size * 2)
@@ -2360,8 +2360,8 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
           ZChannel.readWithCause[Env, Err, Chunk[In], Any, Err, Chunk[In], Unit](
             (in: Chunk[In]) =>
               ZChannel.unwrap((costFn(in) <*> Clock.nanoTime).map { case (weight, current) =>
-                val elapsed = current - timestamp
-                val cycles  = elapsed.toDouble / duration.toNanos
+                val elapsed   = current - timestamp
+                val cycles    = elapsed.toDouble / duration.toNanos
                 val available = {
                   val sum = tokens + (cycles * units).toLong
                   val max =
@@ -2415,8 +2415,8 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
               weight  <- costFn(in)
               current <- Clock.nanoTime
             } yield {
-              val elapsed = current - timestamp
-              val cycles  = elapsed.toDouble / duration.toNanos
+              val elapsed   = current - timestamp
+              val cycles    = elapsed.toDouble / duration.toNanos
               val available = {
                 val sum = tokens + (cycles * units).toLong
                 val max =
@@ -2427,7 +2427,7 @@ object ZPipeline extends ZPipelinePlatformSpecificConstructors {
                 else math.min(sum, max)
               }
 
-              val remaining = available - weight
+              val remaining  = available - weight
               val waitCycles =
                 if (remaining >= 0) 0
                 else -remaining.toDouble / units
