@@ -65,7 +65,7 @@ object DeriveGen {
   given DeriveGen[LocalDateTime] = instance(Gen.localDateTime)
   given DeriveGen[LocalDate]     = instance(Gen.localDate)
   given DeriveGen[LocalTime]     = instance(Gen.localTime)
-  given DeriveGen[BigDecimal] = instance(
+  given DeriveGen[BigDecimal]    = instance(
     Gen.bigDecimal(
       BigDecimal(Double.MinValue) * BigDecimal(Double.MaxValue),
       BigDecimal(Double.MaxValue) * BigDecimal(Double.MaxValue)
@@ -95,7 +95,7 @@ object DeriveGen {
   given [A](using a: DeriveGen[A]): DeriveGen[Vector[A]] =
     instance(Gen.vectorOf(a.derive))
 
-  given DeriveGen[EmptyTuple] = instance(Gen.const(EmptyTuple))
+  given DeriveGen[EmptyTuple]                                                      = instance(Gen.const(EmptyTuple))
   given [A, T <: Tuple](using a: DeriveGen[A], t: DeriveGen[T]): DeriveGen[A *: T] =
     instance((a.derive <*> t.derive).map(_ *: _))
 

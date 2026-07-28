@@ -51,10 +51,10 @@ class ZIOTestClassDescriptor(parent: TestDescriptor, uniqueId: UniqueId, val tes
     path: Vector[String] = Vector.empty
   ): ZIO[R with Scope, Any, Unit] =
     spec.caseValue match {
-      case Spec.ExecCase(_, spec: Spec[R, E]) => traverse(spec, description, path)
+      case Spec.ExecCase(_, spec: Spec[R, E])        => traverse(spec, description, path)
       case Spec.LabeledCase(label, spec: Spec[R, E]) =>
         traverse(spec, description, path :+ label)
-      case Spec.ScopedCase(scoped) => scoped.flatMap((s: Spec[R, E]) => traverse(s, description, path))
+      case Spec.ScopedCase(scoped)  => scoped.flatMap((s: Spec[R, E]) => traverse(s, description, path))
       case Spec.MultipleCase(specs) =>
         val suiteDesc = new ZIOSuiteTestDescriptor(
           description,

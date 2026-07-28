@@ -78,7 +78,7 @@ object ZChannelSpec extends ZIOBaseSpec {
         test("last finalizers are deferred to the Scope") {
           Ref.make(Chunk[String]()).flatMap { events =>
             def event(label: String) = events.update(_ :+ label)
-            val channel =
+            val channel              =
               (ZChannel.fromZIO(event("Acquire1")).ensuring(event("Release11")).ensuring(event("Release12")) *>
                 ZChannel.fromZIO(event("Acquire2")).ensuring(event("Release2"))).ensuring(event("ReleaseOuter"))
 
@@ -142,7 +142,7 @@ object ZChannelSpec extends ZIOBaseSpec {
           for {
             effects <- Ref.make(List[String]())
             push     = (i: String) => effects.update(i :: _)
-            _ <- ZChannel
+            _       <- ZChannel
                    .writeAll(1, 2)
                    .mapOutZIO(n => push(s"pulled $n").as(n))
                    .concatMap(n =>
@@ -231,8 +231,8 @@ object ZChannelSpec extends ZIOBaseSpec {
           }
         },
         test("read from inner conduit") {
-          val source = ZChannel.writeAll(1, 2, 3, 4)
-          val reader = ZChannel.read[Int].flatMap(ZChannel.write(_))
+          val source  = ZChannel.writeAll(1, 2, 3, 4)
+          val reader  = ZChannel.read[Int].flatMap(ZChannel.write(_))
           val readers =
             ZChannel.writeAll((), ()).concatMap(_ => reader *> reader)
 
@@ -390,7 +390,7 @@ object ZChannelSpec extends ZIOBaseSpec {
               latch       <- Promise.make[Nothing, Unit]
               halt        <- Promise.make[Nothing, Unit]
               started     <- Promise.make[Nothing, Unit]
-              fiber <- ZChannel
+              fiber       <- ZChannel
                          .fromZIO(
                            (started.succeed(()) *> latch.await).onInterrupt(interrupted.set(true))
                          )
@@ -404,8 +404,8 @@ object ZChannelSpec extends ZIOBaseSpec {
           },
           test("propagates errors") {
             for {
-              halt <- Promise.make[String, Nothing]
-              _    <- halt.fail("Fail")
+              halt   <- Promise.make[String, Nothing]
+              _      <- halt.fail("Fail")
               result <- (ZChannel.write(1) *> ZChannel.fromZIO(ZIO.never))
                           .interruptWhen(halt.await)
                           .runDrain
@@ -420,7 +420,7 @@ object ZChannelSpec extends ZIOBaseSpec {
               latch       <- Promise.make[Nothing, Unit]
               halt        <- Promise.make[Nothing, Unit]
               started     <- Promise.make[Nothing, Unit]
-              fiber <- ZChannel
+              fiber       <- ZChannel
                          .fromZIO(
                            (started.succeed(()) *> latch.await).onInterrupt(interrupted.set(true))
                          )
@@ -434,8 +434,8 @@ object ZChannelSpec extends ZIOBaseSpec {
           },
           test("propagates errors") {
             for {
-              halt <- Promise.make[String, Nothing]
-              _    <- halt.fail("Fail")
+              halt   <- Promise.make[String, Nothing]
+              _      <- halt.fail("Fail")
               result <- ZChannel
                           .fromZIO(ZIO.never)
                           .interruptWhen(halt.await)
@@ -457,7 +457,7 @@ object ZChannelSpec extends ZIOBaseSpec {
         test("simple reads") {
           case class Whatever(i: Int)
 
-          val left = ZChannel.writeAll(1, 2, 3)
+          val left  = ZChannel.writeAll(1, 2, 3)
           val right = ZChannel
             .read[Int]
             .catchAll(_ => ZChannel.succeedNow(4))
@@ -714,7 +714,7 @@ object ZChannelSpec extends ZIOBaseSpec {
           promise  <- Promise.make[Nothing, Unit]
           finished <- Promise.make[Nothing, Unit]
           ref      <- Ref.make[Exit[Any, Any]](Exit.unit)
-          _ <- ZChannel
+          _        <- ZChannel
                  .fromZIO(promise.succeed(()) *> ZIO.never)
                  .runDrain
                  .onExit(ref.set)
@@ -729,7 +729,7 @@ object ZChannelSpec extends ZIOBaseSpec {
           ref    <- Ref.make(0)
           acquire = ref.update(_ + 1) *> ZIO.yieldNow
           release = ref.update(_ - 1)
-          _ <- ZChannel
+          _      <- ZChannel
                  .acquireReleaseOutWith(acquire)(_ => release)
                  .as(ZChannel.never)
                  .runDrain
@@ -745,7 +745,7 @@ object ZChannelSpec extends ZIOBaseSpec {
           acquire = ref.update(_ + 1) *> ZIO.yieldNow
           release = ref.update(_ - 1)
           scoped  = ZIO.acquireRelease(acquire)(_ => release)
-          _ <- ZChannel
+          _      <- ZChannel
                  .unwrapScoped(scoped.as(ZChannel.never))
                  .runDrain
                  .fork

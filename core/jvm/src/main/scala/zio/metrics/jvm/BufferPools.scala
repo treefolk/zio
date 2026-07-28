@@ -16,7 +16,7 @@ object BufferPools {
   val live: ZLayer[JvmMetricsSchedule, Throwable, Reloadable[BufferPools]] =
     ZLayer.scoped {
       for {
-        bufferPoolMXBeans <- ZIO.attempt(ManagementFactory.getPlatformMXBeans(classOf[BufferPoolMXBean]).asScala)
+        bufferPoolMXBeans  <- ZIO.attempt(ManagementFactory.getPlatformMXBeans(classOf[BufferPoolMXBean]).asScala)
         bufferPoolUsedBytes = PollingMetric.collectAll(bufferPoolMXBeans.map { mxBean =>
                                 PollingMetric(
                                   Metric

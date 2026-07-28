@@ -187,9 +187,9 @@ object Semaphore {
           ): (UIO[Any], Either[ScalaQueue[(Promise[Nothing, Unit], Long)], Long]) =
             state match {
               case Right(permits) => acc -> Right(permits + n)
-              case Left(queue) =>
+              case Left(queue)    =>
                 queue.dequeueOption match {
-                  case None => acc -> Right(n)
+                  case None                              => acc -> Right(n)
                   case Some(((promise, permits), queue)) =>
                     if (n > permits)
                       loop(n - permits, Left(queue), acc *> promise.succeedUnit)

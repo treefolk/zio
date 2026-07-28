@@ -62,7 +62,7 @@ private[zio] trait ZIOAppPlatformSpecific { self: ZIOApp =>
         ZIO.uninterruptible {
           for {
             fiberId <- ZIO.fiberId
-            fiber <- workflow.interruptible.exitWith { exit0 =>
+            fiber   <- workflow.interruptible.exitWith { exit0 =>
                        val exitCode = if (exit0.isSuccess) ExitCode.success else ExitCode.failure
                        interruptRootFibers(fiberId).as(exitCode)
                      }.fork

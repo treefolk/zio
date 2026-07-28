@@ -52,7 +52,7 @@ private[test] object ZIOSpecVersionSpecificMacros {
           val mySuite = {
             val reversedRefs  = refs.reverse
             val combinedTypes = reversedRefs.map(_.tpe).reduce(OrType(_, _)).widen
-            val names =
+            val names         =
               combinedTypes.asType match {
                 case '[specType] =>
                   Varargs(reversedRefs.map { a =>

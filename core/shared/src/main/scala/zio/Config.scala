@@ -297,7 +297,7 @@ object Config {
   }
   final case class Described[A](config: Config[A], description: String) extends Composite[A]
   final case class Lazy[A](thunk: () => Config[A])                      extends Composite[A]
-  case object LocalDateTime extends Primitive[java.time.LocalDateTime] {
+  case object LocalDateTime                                             extends Primitive[java.time.LocalDateTime] {
     final def parse(text: String): Either[Config.Error, java.time.LocalDateTime] =
       try
         Right(java.time.LocalDateTime.parse(text))
@@ -326,7 +326,7 @@ object Config {
   }
   final case class MapOrFail[A, B](original: Config[A], mapOrFail: A => Either[Config.Error, B]) extends Composite[B]
   final case class Nested[A](name: String, config: Config[A])                                    extends Composite[A]
-  case object OffsetDateTime extends Primitive[java.time.OffsetDateTime] {
+  case object OffsetDateTime                                                                     extends Primitive[java.time.OffsetDateTime] {
     final def parse(text: String): Either[Config.Error, java.time.OffsetDateTime] =
       try
         Right(java.time.OffsetDateTime.parse(text))
@@ -343,7 +343,7 @@ object Config {
   final case class Sequence[A](config: Config[A])                          extends Composite[Chunk[A]]
   final case class Switch[A, B](config: Config[A], map: Map[A, Config[B]]) extends Composite[B]
   final case class Table[V](valueConfig: Config[V])                        extends Composite[Map[String, V]]
-  case object Text extends Primitive[String] {
+  case object Text                                                         extends Primitive[String] {
     final def parse(text: String): Either[Config.Error, String] = Right(text)
   }
   final case class Zipped[A, B, C](left: Config[A], right: Config[B], zippable: Zippable.Out[A, B, C])
@@ -483,7 +483,7 @@ object Config {
           path: Chunk[String],
           message: String,
           cause: Cause[Throwable]
-        ): Boolean = false
+        ): Boolean                                                                       = false
         def unsupportedCase(context: Any, path: Chunk[String], message: String): Boolean = false
       }
     }

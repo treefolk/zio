@@ -139,7 +139,7 @@ object RuntimeBootstrapTests {
     test("async interruption of never") {
       for {
         finalized <- Ref.make(false)
-        fork <- ((ZIO
+        fork      <- ((ZIO
                   .asyncMaybe[Any, Nothing, Unit] { _ =>
                     Some(ZIO.unit)
                   }
@@ -181,7 +181,7 @@ object RuntimeBootstrapTests {
   def useInheritance() =
     test("acquireRelease use inherits interrupt status") {
       for {
-        ref <- Ref.make(false)
+        ref    <- Ref.make(false)
         fiber1 <-
           withLatch { (release2, await2) =>
             withLatch { release1 =>
@@ -219,7 +219,7 @@ object RuntimeBootstrapTests {
   def asyncUninterruptible() =
     test("async can be uninterruptible") {
       for {
-        ref <- Ref.make(false)
+        ref   <- Ref.make(false)
         fiber <- withLatch { release =>
                    (release *> Clock.sleep(10.millis) *> ref.set(true).unit).uninterruptible.fork
                  }
@@ -257,7 +257,7 @@ object RuntimeBootstrapTests {
       for {
         useLatch     <- Promise.make[Nothing, Unit]
         releaseLatch <- Promise.make[Nothing, Unit]
-        fiber <- ZIO
+        fiber        <- ZIO
                    .acquireReleaseWith(ZIO.unit)(_ => releaseLatch.succeed(()) *> ZIO.unit)(_ =>
                      useLatch.succeed(()) *> ZIO.never
                    )
@@ -275,7 +275,7 @@ object RuntimeBootstrapTests {
         finalized      <- Ref.make(false)
         startLatch     <- Promise.make[Nothing, Unit]
         finalizedLatch <- Promise.make[Nothing, Unit]
-        fiber <- (startLatch.succeed(()) *> ZIO.never)
+        fiber          <- (startLatch.succeed(()) *> ZIO.never)
                    .ensuring(finalized.set(true) *> Clock.sleep(10.millis) *> finalizedLatch.succeed(()))
                    .disconnect
                    .fork
@@ -323,7 +323,7 @@ object RuntimeBootstrapTests {
         endLatch            <- Promise.make[Nothing, Unit]
         exitRef             <- Ref.make[Exit[Any, Any]](Exit.succeed(()))
         pastInterruptionRef <- Ref.make(false)
-        fiber <- (ZIO.uninterruptibleMask { restore =>
+        fiber               <- (ZIO.uninterruptibleMask { restore =>
                    restore(startLatch.succeed(()) *> ZIO.infinity).exit.flatMap(exitRef.set(_))
                  } *> pastInterruptionRef.set(true)).ensuring(endLatch.succeed(())).fork
         _    <- startLatch.await
@@ -577,7 +577,7 @@ object RuntimeBootstrapTests {
         breakpoint1 <- Promise.make[Nothing, Unit]
         breakpoint2 <- Promise.make[Nothing, Unit]
         started     <- Promise.make[Nothing, Unit]
-        effect =
+        effect       =
           for {
             _      <- started.succeed(())
             cause1 <- ZIO.interruptible(ZIO.never).catchAllCause(ZIO.succeed(_)) <* breakpoint1.succeed(())
@@ -593,7 +593,7 @@ object RuntimeBootstrapTests {
 
   def stackRegression1() =
     test("return a `CompletableFuture` that fails if `IO` fails") {
-      val error = new Exception("IOs also can fail")
+      val error  = new Exception("IOs also can fail")
       val failed = ZIO.fail(error).catchAll { e =>
         println("about to throw: " + e)
         ZIO.attempt(throw e)

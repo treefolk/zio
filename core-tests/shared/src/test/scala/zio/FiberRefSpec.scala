@@ -62,7 +62,7 @@ object FiberRefSpec extends ZIOBaseSpec {
       test("`getAndUpdateSome` changes value") {
         for {
           fiberRef <- FiberRef.make(initial)
-          value1 <- fiberRef.getAndUpdateSome { case _ =>
+          value1   <- fiberRef.getAndUpdateSome { case _ =>
                       update
                     }
           value2 <- fiberRef.get
@@ -71,7 +71,7 @@ object FiberRefSpec extends ZIOBaseSpec {
       test("`getAndUpdateSome` not changes value") {
         for {
           fiberRef <- FiberRef.make(initial)
-          value1 <- fiberRef.getAndUpdateSome {
+          value1   <- fiberRef.getAndUpdateSome {
                       case _ if false => update
                     }
           value2 <- fiberRef.get
@@ -120,7 +120,7 @@ object FiberRefSpec extends ZIOBaseSpec {
       test("`modifySome` not changes value") {
         for {
           fiberRef <- FiberRef.make(initial)
-          value1 <- fiberRef.modifySome(2) {
+          value1   <- fiberRef.modifySome(2) {
                       case _ if false => (1, update)
                     }
           value2 <- fiberRef.get
@@ -152,7 +152,7 @@ object FiberRefSpec extends ZIOBaseSpec {
       test("`updateSomeAndGet` changes value") {
         for {
           fiberRef <- FiberRef.make(initial)
-          value1 <- fiberRef.updateSomeAndGet { case _ =>
+          value1   <- fiberRef.updateSomeAndGet { case _ =>
                       update
                     }
           value2 <- fiberRef.get
@@ -161,7 +161,7 @@ object FiberRefSpec extends ZIOBaseSpec {
       test("`updateSomeAndGet` not changes value") {
         for {
           fiberRef <- FiberRef.make(initial)
-          value1 <- fiberRef.updateSomeAndGet {
+          value1   <- fiberRef.updateSomeAndGet {
                       case _ if false => update
                     }
           value2 <- fiberRef.get
@@ -430,7 +430,7 @@ object FiberRefSpec extends ZIOBaseSpec {
         fiberRef <- FiberRef.make[Boolean](true, _ => true)
         runtime  <- fiberRef.locally(false)(ZIO.runtime[Any])
         promise  <- Promise.make[Nothing, Boolean]
-        _ <- ZIO.succeed {
+        _        <- ZIO.succeed {
                Unsafe.unsafe { implicit unsafe =>
                  runtime.unsafe.run(fiberRef.get.intoPromise(promise))
                }
@@ -443,7 +443,7 @@ object FiberRefSpec extends ZIOBaseSpec {
         fiberRef <- FiberRef.make[Boolean](true, _ => true)
         runtime  <- fiberRef.locally(false)(ZIO.runtime[Any])
         promise  <- Promise.make[Nothing, Boolean]
-        _ <- ZIO.succeed {
+        _        <- ZIO.succeed {
                Unsafe.unsafe { implicit unsafe =>
                  runtime.unsafe.fork(fiberRef.get.intoPromise(promise))
                }

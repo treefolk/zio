@@ -54,7 +54,7 @@ private[zio] final class ChannelExecutor[Env, InErr, InElem, InDone, OutErr, Out
     def go(): Unit =
       if (doneStack.nonEmpty) {
         doneStack.head match {
-          case ZChannel.Fold.K(_, _) =>
+          case ZChannel.Fold.K(_, _)                  =>
           case finalizer @ ZChannel.Fold.Finalizer(_) =>
             builder += finalizer.asInstanceOf[ZChannel.Fold.Finalizer[Env, Any, Any]]
             doneStack.pop()
@@ -772,7 +772,7 @@ private[zio] object ChannelExecutor {
   private[zio] def execToPullingChannel[Env](
     exec: ErasedExecutor[Env]
   )(implicit trace: Trace): ZChannel[Env, Any, Any, Any, Any, Any, Any] = {
-    val MAX_STEPS = 128
+    val MAX_STEPS                                                                    = 128
     def ch2(st: ChannelState[Env, Any]): ZChannel[Env, Any, Any, Any, Any, Any, Any] =
       st match {
         case ChannelState.Done =>
@@ -958,8 +958,8 @@ private[zio] class SingleProducerAsyncInput[Err, Elem, Done](
       ref.modify {
         case State.Emit(notifyConsumers) =>
           (p.await.foldCause(onError, _.fold(onDone, onElement)), State.Emit(notifyConsumers.enqueue(p)))
-        case s @ State.Error(a) => (ZIO.succeed(onError(a)), s)
-        case s @ State.Done(a)  => (ZIO.succeed(onDone(a)), s)
+        case s @ State.Error(a)              => (ZIO.succeed(onError(a)), s)
+        case s @ State.Done(a)               => (ZIO.succeed(onDone(a)), s)
         case s @ State.Empty(notifyProducer) =>
           (notifyProducer.succeed(()) *> p.await.foldCause(onError, _.fold(onDone, onElement)), State.Emit(Queue(p)))
       }.flatten

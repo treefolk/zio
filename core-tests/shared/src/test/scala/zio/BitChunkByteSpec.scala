@@ -85,8 +85,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("and") {
       check(genBitChunk, genBitChunk) { (l, r) =>
-        val anded  = l & r
-        val actual = anded.toBinaryString.take(anded.length)
+        val anded    = l & r
+        val actual   = anded.toBinaryString.take(anded.length)
         val expected =
           l.bytes
             .map(toBinaryString)
@@ -109,8 +109,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("or") {
       check(genBitChunk, genBitChunk) { (l, r) =>
-        val ored   = l | r
-        val actual = ored.toBinaryString.take(ored.length)
+        val ored     = l | r
+        val actual   = ored.toBinaryString.take(ored.length)
         val expected =
           l.bytes
             .map(toBinaryString)
@@ -133,8 +133,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("xor") {
       check(genBitChunk, genBitChunk) { (l, r) =>
-        val xored  = l ^ r
-        val actual = xored.toBinaryString.take(xored.length)
+        val xored    = l ^ r
+        val actual   = xored.toBinaryString.take(xored.length)
         val expected =
           l.bytes
             .map(toBinaryString)
@@ -157,8 +157,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("not") {
       check(genBitChunk) { bits =>
-        val not    = bits.negate
-        val actual = not.toBinaryString.take(not.length)
+        val not      = bits.negate
+        val actual   = not.toBinaryString.take(not.length)
         val expected =
           bits.bytes
             .map(toBinaryString)
@@ -176,8 +176,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("boolean and") {
       check(genBoolChunk, genBoolChunk) { (l, r) =>
-        val anded  = l & r
-        val actual = anded.toBinaryString.take(anded.length)
+        val anded    = l & r
+        val actual   = anded.toBinaryString.take(anded.length)
         val expected = l
           .zipWith(r)(_ & _)
           .map {
@@ -190,8 +190,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("boolean or") {
       check(genBoolChunk, genBoolChunk) { (l, r) =>
-        val ored   = l | r
-        val actual = ored.toBinaryString.take(ored.length)
+        val ored     = l | r
+        val actual   = ored.toBinaryString.take(ored.length)
         val expected = l
           .zipWith(r)(_ | _)
           .map {
@@ -204,8 +204,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("boolean xor") {
       check(genBoolChunk, genBoolChunk) { (l, r) =>
-        val xored  = l ^ r
-        val actual = xored.toBinaryString.take(xored.length)
+        val xored    = l ^ r
+        val actual   = xored.toBinaryString.take(xored.length)
         val expected = l
           .zipWith(r)(_ ^ _)
           .map {
@@ -218,8 +218,8 @@ object BitChunkByteSpec extends ZIOBaseSpec {
     },
     test("boolean not") {
       check(genBoolChunk) { bits =>
-        val not    = bits.negate
-        val actual = not.toBinaryString.take(not.length)
+        val not      = bits.negate
+        val actual   = not.toBinaryString.take(not.length)
         val expected = bits.map {
           case true  => '0'
           case false => '1'

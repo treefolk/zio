@@ -28,7 +28,7 @@ private[zio] trait ClockPlatformSpecific {
 
     override def schedule(task: Runnable, duration: Duration)(implicit unsafe: Unsafe): CancelToken =
       (duration: @unchecked) match {
-        case Duration.Infinity => ConstFalse
+        case Duration.Infinity  => ConstFalse
         case Duration.Finite(_) =>
           var completed = false
 

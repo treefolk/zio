@@ -238,7 +238,7 @@ object ZTestFrameworkSbtSpec {
     val taskDef =
       new TaskDef(FrameworkSpecInstances.failingSpecFQN, ZioSpecFingerprint, false, Array(new TestSelector("nope")))
     val runner = new ZTestFramework().runner(Array(), Array(), getClass.getClassLoader)
-    val task = runner
+    val task   = runner
       .tasks(Array(taskDef))
       .map(task => task.asInstanceOf[ZTestTask[_]])
       .map { zTestTask =>

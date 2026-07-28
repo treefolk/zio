@@ -10,7 +10,7 @@ object ExecutionEventSinkSpec extends ZIOBaseSpec {
     test("process single test") {
       for {
         randomId <- ZIO.withRandom(Random.RandomLive)(Random.nextInt).map("test_case_" + _)
-        event = ExecutionEvent.Test(
+        event     = ExecutionEvent.Test(
                   List("add", "ConcurrentSetSpec"),
                   Right(TestSuccess.Succeeded()),
                   TestAnnotationMap.empty,
@@ -27,7 +27,7 @@ object ExecutionEventSinkSpec extends ZIOBaseSpec {
     test("process single test failure") {
       for {
         randomId <- ZIO.withRandom(Random.RandomLive)(Random.nextInt).map("test_case_" + _)
-        event = ExecutionEvent.Test(
+        event     = ExecutionEvent.Test(
                   List("add", "ConcurrentSetSpec"),
                   Left(TestFailure.fail("You lose! Good day, sir!")),
                   TestAnnotationMap.empty,
@@ -44,7 +44,7 @@ object ExecutionEventSinkSpec extends ZIOBaseSpec {
     test("process with ancestor") {
       for {
         randomId <- ZIO.withRandom(Random.RandomLive)(Random.nextInt).map("test_case_" + _)
-        event = ExecutionEvent.Test(
+        event     = ExecutionEvent.Test(
                   List("add", "ConcurrentSetSpec"),
                   Right(TestSuccess.Succeeded()),
                   TestAnnotationMap.empty,

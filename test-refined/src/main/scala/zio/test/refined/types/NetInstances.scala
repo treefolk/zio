@@ -10,11 +10,11 @@ object net extends NetInstances
 trait NetInstances {
   private val _0to255 = Gen.int(0, 255)
 
-  val portNumberGen: Gen[Any, PortNumber]                   = Gen.int(0, 656535).map(Refined.unsafeApply)
-  val systemPortNumberGen: Gen[Any, SystemPortNumber]       = Gen.int(0, 1023).map(Refined.unsafeApply)
-  val userPortNumberGen: Gen[Any, UserPortNumber]           = Gen.int(1024, 49151).map(Refined.unsafeApply)
-  val dynamicPortNumberGen: Gen[Any, DynamicPortNumber]     = Gen.int(49152, 65535).map(Refined.unsafeApply)
-  val nonSystemPortNumberGen: Gen[Any, NonSystemPortNumber] = Gen.int(1024, 65535).map(Refined.unsafeApply)
+  val portNumberGen: Gen[Any, PortNumber]                     = Gen.int(0, 656535).map(Refined.unsafeApply)
+  val systemPortNumberGen: Gen[Any, SystemPortNumber]         = Gen.int(0, 1023).map(Refined.unsafeApply)
+  val userPortNumberGen: Gen[Any, UserPortNumber]             = Gen.int(1024, 49151).map(Refined.unsafeApply)
+  val dynamicPortNumberGen: Gen[Any, DynamicPortNumber]       = Gen.int(49152, 65535).map(Refined.unsafeApply)
+  val nonSystemPortNumberGen: Gen[Any, NonSystemPortNumber]   = Gen.int(1024, 65535).map(Refined.unsafeApply)
   val rfc1918ClassAPrivateGen: Gen[Any, Rfc1918ClassAPrivate] =
     (_0to255 <*> _0to255 <*> _0to255).map { case (a, b, c) => Refined.unsafeApply(s"10.$a.$b.$c") }
   val rfc1918ClassBPrivateGen: Gen[Any, Rfc1918ClassBPrivate] =
@@ -28,7 +28,7 @@ trait NetInstances {
   val rfc5737Testnet1Gen: Gen[Any, Rfc5737Testnet1] = _0to255.map(v => Refined.unsafeApply(s"192.0.2.$v"))
   val rfc5737Testnet2Gen: Gen[Any, Rfc5737Testnet2] = _0to255.map(v => Refined.unsafeApply(s"198.51.100.$v"))
   val rfc5737Testnet3Gen: Gen[Any, Rfc5737Testnet3] = _0to255.map(v => Refined.unsafeApply(s"203.0.113.$v"))
-  val rfc5737TestnetGen: Gen[Any, Rfc5737Testnet] = Gen
+  val rfc5737TestnetGen: Gen[Any, Rfc5737Testnet]   = Gen
     .oneOf(rfc5737Testnet1Gen, rfc5737Testnet2Gen, rfc5737Testnet3Gen)
     .map(v => Refined.unsafeApply(v.value))
   val rfc3927LocalLinkGen: Gen[Any, Rfc3927LocalLink] =
@@ -40,11 +40,11 @@ trait NetInstances {
       .oneOf(rfc1918PrivateGen, rfc5737TestnetGen, rfc3927LocalLinkGen, rfc2544BenchmarkGen)
       .map(v => Refined.unsafeApply(v.value))
 
-  implicit val portNumberDeriveGen: DeriveGen[PortNumber]                   = DeriveGen.instance(portNumberGen)
-  implicit val systemPortNumberDeriveGen: DeriveGen[SystemPortNumber]       = DeriveGen.instance(systemPortNumberGen)
-  implicit val userPortNumberDeriveGen: DeriveGen[UserPortNumber]           = DeriveGen.instance(userPortNumberGen)
-  implicit val dynamicPortNumberDeriveGen: DeriveGen[DynamicPortNumber]     = DeriveGen.instance(dynamicPortNumberGen)
-  implicit val nonSystemPortNumberDeriveGen: DeriveGen[NonSystemPortNumber] = DeriveGen.instance(nonSystemPortNumberGen)
+  implicit val portNumberDeriveGen: DeriveGen[PortNumber]                     = DeriveGen.instance(portNumberGen)
+  implicit val systemPortNumberDeriveGen: DeriveGen[SystemPortNumber]         = DeriveGen.instance(systemPortNumberGen)
+  implicit val userPortNumberDeriveGen: DeriveGen[UserPortNumber]             = DeriveGen.instance(userPortNumberGen)
+  implicit val dynamicPortNumberDeriveGen: DeriveGen[DynamicPortNumber]       = DeriveGen.instance(dynamicPortNumberGen)
+  implicit val nonSystemPortNumberDeriveGen: DeriveGen[NonSystemPortNumber]   = DeriveGen.instance(nonSystemPortNumberGen)
   implicit val rfc1918ClassAPrivateDeriveGen: DeriveGen[Rfc1918ClassAPrivate] =
     DeriveGen.instance(rfc1918ClassAPrivateGen)
   implicit val rfc1918ClassBPrivateDeriveGen: DeriveGen[Rfc1918ClassBPrivate] =

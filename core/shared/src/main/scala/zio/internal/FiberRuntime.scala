@@ -1450,7 +1450,7 @@ final class FiberRuntime[E, A](fiberId: FiberId.Runtime, fiberRefs0: FiberRefs, 
 
   private[zio] def startSuspended()(implicit unsafe: Unsafe): ZIO[_, E, A] => Any = {
     val alreadyCalled = new AtomicBoolean(false)
-    val callback = (effect: ZIO[_, E, A]) => {
+    val callback      = (effect: ZIO[_, E, A]) => {
       if (alreadyCalled.compareAndSet(false, true)) {
         tell(FiberMessage.Resume(effect))
       }
@@ -1582,7 +1582,7 @@ object FiberRuntime {
 
   private val fiberFailureTracker: Cause.Folder[Set[MetricLabel], Any, Unit] =
     new Cause.Folder[Set[MetricLabel], Any, Unit] {
-      def empty(context: Set[MetricLabel]): Unit = ()
+      def empty(context: Set[MetricLabel]): Unit                                        = ()
       def failCase(context: Set[MetricLabel], error: Any, stackTrace: StackTrace): Unit =
         Metric.runtime.fiberFailureCauses.unsafe.update(error.getClass.getName, context)(Unsafe)
 

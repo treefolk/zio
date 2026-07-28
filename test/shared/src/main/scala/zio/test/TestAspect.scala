@@ -776,7 +776,7 @@ object TestAspect extends TimeoutVariants {
   def nonTermination(duration: Duration): TestAspectPoly =
     timeout(duration) >>>
       failing {
-        case TestFailure.Assertion(_, _) => false
+        case TestFailure.Assertion(_, _)   => false
         case TestFailure.Runtime(cause, _) =>
           cause.dieOption match {
             case Some(t) => t.getMessage == s"Timeout of ${duration.render} exceeded."

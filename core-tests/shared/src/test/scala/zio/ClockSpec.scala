@@ -7,7 +7,7 @@ import java.time.Instant
 
 object ClockSpec extends ZIOBaseSpec {
 
-  val someFixedInstant = java.time.Instant.parse("2021-11-13T03:42:09.343835Z")
+  val someFixedInstant          = java.time.Instant.parse("2021-11-13T03:42:09.343835Z")
   val europeAmsterdamFixedClock =
     java.time.Clock.fixed(someFixedInstant, java.time.ZoneId.of("Europe/Amsterdam")) // 8 hours later than Phoenix
   val americaPhoenixFixedClock =

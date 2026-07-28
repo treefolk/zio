@@ -30,13 +30,13 @@ object TestProvideAutoSpec extends ZIOBaseSpec {
       })
     }
 
-    trait Fly {}
+    trait Fly  {}
     object Fly {
       def live: URLayer[Spider, Fly]          = ZLayer.succeed(new Fly {})
       def manEatingFly: URLayer[OldLady, Fly] = ZLayer.succeed(new Fly {})
     }
 
-    trait Spider {}
+    trait Spider  {}
     object Spider {
       def live: ULayer[Spider] = ZLayer.succeed(new Spider {})
     }

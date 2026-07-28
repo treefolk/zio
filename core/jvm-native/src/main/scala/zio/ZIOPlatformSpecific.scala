@@ -40,7 +40,7 @@ private[zio] trait ZIOPlatformSpecific[-R, +E, +A] { self: ZIO[R, E, A] =>
     ZIO.uninterruptibleMask { restore =>
       for {
         future <- ZIO.succeed(new CompletableFuture[A1])
-        _ <- restore(self)
+        _      <- restore(self)
                .foldCause(
                  cause => future.completeExceptionally(cause.squashTraceWith(f)),
                  a => future.complete(a)

@@ -63,7 +63,7 @@ final class MVar[A] private (private val content: TRef[Option[A]]) {
   def swap(x: A): UIO[A] =
     (for {
       ref <- content.get
-      y <- ref match {
+      y   <- ref match {
              case Some(y) => content.set(Some(x)) as y
              case None    => STM.retry
            }

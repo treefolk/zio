@@ -69,8 +69,8 @@ trait TestClockPlatformSpecific { self: TestClock.Test =>
                 case _            => Scheduling(end)
               }
               if (updatedState == Scheduling(end)) {
-                val start    = now()
-                val interval = Duration.fromInterval(start, end)
+                val start       = now()
+                val interval    = Duration.fromInterval(start, end)
                 val cancelToken =
                   schedule(
                     () =>
@@ -111,7 +111,7 @@ trait TestClockPlatformSpecific { self: TestClock.Test =>
                 else self.getDelay(TimeUnit.NANOSECONDS).compareTo(that.getDelay(TimeUnit.NANOSECONDS))
               def getDelay(unit: TimeUnit): Long =
                 localState.get match {
-                  case Done(_) => 0L
+                  case Done(_)         => 0L
                   case Running(_, end) =>
                     unit.convert(Duration.fromInterval(now(), end).toMillis, TimeUnit.MILLISECONDS)
                   case Scheduling(end) =>

@@ -71,15 +71,15 @@ object UpdatedAccessibleMacroExample {
   }
 
   object CompanionSanityCheck {
-    val _foo: URIO[CompanionService, Unit]                                      = CompanionService.foo
-    def _bar(n: Int): URIO[CompanionService, Unit]                              = CompanionService.bar(n)
-    def _baz(x: Int, y: Int): ZIO[CompanionService, String, Int]                = CompanionService.baz(x, y)
-    def _poly[A](a: A): ZIO[CompanionService, Long, A]                          = CompanionService.poly(a)
-    def _poly2[A <: Foo](a: Wrapped[A]): ZIO[CompanionService, String, List[A]] = CompanionService.poly2(a)
-    def _dependent(n: Int): ZIO[CompanionService with Random, Long, Int]        = CompanionService.dependent(n)
-    def _value: RIO[CompanionService, String]                                   = CompanionService.value
-    def _function(n: Int): RIO[CompanionService, String]                        = CompanionService.function(n)
-    def _stream(n: Int): ZStream[CompanionService, String, Int]                 = CompanionService.stream(n)
+    val _foo: URIO[CompanionService, Unit]                                        = CompanionService.foo
+    def _bar(n: Int): URIO[CompanionService, Unit]                                = CompanionService.bar(n)
+    def _baz(x: Int, y: Int): ZIO[CompanionService, String, Int]                  = CompanionService.baz(x, y)
+    def _poly[A](a: A): ZIO[CompanionService, Long, A]                            = CompanionService.poly(a)
+    def _poly2[A <: Foo](a: Wrapped[A]): ZIO[CompanionService, String, List[A]]   = CompanionService.poly2(a)
+    def _dependent(n: Int): ZIO[CompanionService with Random, Long, Int]          = CompanionService.dependent(n)
+    def _value: RIO[CompanionService, String]                                     = CompanionService.value
+    def _function(n: Int): RIO[CompanionService, String]                          = CompanionService.function(n)
+    def _stream(n: Int): ZStream[CompanionService, String, Int]                   = CompanionService.stream(n)
     def _sink(n: Int): ZSink[CompanionService, Nothing, Int, Nothing, Chunk[Int]] =
       CompanionService.sink(n)
 
@@ -168,19 +168,19 @@ object AccessibleMacroExample {
     } yield (v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13)
 
   // sanity check
-  val _foo: URIO[AccessibleMacroExample, Unit]                                      = AccessibleMacroExample.foo
-  def _foo2: URIO[AccessibleMacroExample, Unit]                                     = AccessibleMacroExample.foo2
-  def _foo3(): URIO[AccessibleMacroExample, Unit]                                   = AccessibleMacroExample.foo3()
-  def _bar(n: Int): URIO[AccessibleMacroExample, Unit]                              = AccessibleMacroExample.bar(n)
-  def _baz(x: Int, y: Int): ZIO[AccessibleMacroExample, String, Int]                = AccessibleMacroExample.baz(x, y)
-  def _poly[A](a: A): ZIO[AccessibleMacroExample, Long, A]                          = AccessibleMacroExample.poly(a)
-  def _poly2[A <: Foo](a: Wrapped[A]): ZIO[AccessibleMacroExample, String, List[A]] = AccessibleMacroExample.poly2(a)
-  def _dependent(n: Int): ZIO[AccessibleMacroExample with Random, Long, Int]        = AccessibleMacroExample.dependent(n)
-  val _value: URIO[AccessibleMacroExample, String]                                  = AccessibleMacroExample.value
-  def _value2: URIO[AccessibleMacroExample, String]                                 = AccessibleMacroExample.value2
-  def _value3(): URIO[AccessibleMacroExample, String]                               = AccessibleMacroExample.value3()
-  def _function(n: Int): URIO[AccessibleMacroExample, String]                       = AccessibleMacroExample.function(n)
-  def _stream(n: Int): ZStream[AccessibleMacroExample, String, Int]                 = AccessibleMacroExample.stream(n)
+  val _foo: URIO[AccessibleMacroExample, Unit]                                        = AccessibleMacroExample.foo
+  def _foo2: URIO[AccessibleMacroExample, Unit]                                       = AccessibleMacroExample.foo2
+  def _foo3(): URIO[AccessibleMacroExample, Unit]                                     = AccessibleMacroExample.foo3()
+  def _bar(n: Int): URIO[AccessibleMacroExample, Unit]                                = AccessibleMacroExample.bar(n)
+  def _baz(x: Int, y: Int): ZIO[AccessibleMacroExample, String, Int]                  = AccessibleMacroExample.baz(x, y)
+  def _poly[A](a: A): ZIO[AccessibleMacroExample, Long, A]                            = AccessibleMacroExample.poly(a)
+  def _poly2[A <: Foo](a: Wrapped[A]): ZIO[AccessibleMacroExample, String, List[A]]   = AccessibleMacroExample.poly2(a)
+  def _dependent(n: Int): ZIO[AccessibleMacroExample with Random, Long, Int]          = AccessibleMacroExample.dependent(n)
+  val _value: URIO[AccessibleMacroExample, String]                                    = AccessibleMacroExample.value
+  def _value2: URIO[AccessibleMacroExample, String]                                   = AccessibleMacroExample.value2
+  def _value3(): URIO[AccessibleMacroExample, String]                                 = AccessibleMacroExample.value3()
+  def _function(n: Int): URIO[AccessibleMacroExample, String]                         = AccessibleMacroExample.function(n)
+  def _stream(n: Int): ZStream[AccessibleMacroExample, String, Int]                   = AccessibleMacroExample.stream(n)
   def _sink(n: Int): ZSink[AccessibleMacroExample, Nothing, Int, Nothing, Chunk[Int]] =
     AccessibleMacroExample.sink(n)
   def _withEx(): RIO[AccessibleMacroExample, String]           = AccessibleMacroExample.withEx()

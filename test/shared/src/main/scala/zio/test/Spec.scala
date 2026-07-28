@@ -66,7 +66,7 @@ final case class Spec[-R, +E](caseValue: SpecCase[R, E, Spec[R, E]]) extends Spe
     transform[R, E] {
       case ExecCase(exec, spec)     => ExecCase(exec, spec)
       case LabeledCase(label, spec) => LabeledCase(label, spec)
-      case ScopedCase(scoped) =>
+      case ScopedCase(scoped)       =>
         ScopedCase[R, E, Spec[R, E]](
           scoped
         )
@@ -162,7 +162,7 @@ final case class Spec[-R, +E](caseValue: SpecCase[R, E, Spec[R, E]]) extends Spe
     caseValue match {
       case ExecCase(exec, spec)     => spec.foldScoped[R1, E1, Z](exec)(f).flatMap(z => f(ExecCase(exec, z)))
       case LabeledCase(label, spec) => spec.foldScoped[R1, E1, Z](defExec)(f).flatMap(z => f(LabeledCase(label, z)))
-      case ScopedCase(scoped) =>
+      case ScopedCase(scoped)       =>
         scoped.foldCauseZIO(
           c => f(ScopedCase(Exit.failCause(c))),
           spec => spec.foldScoped[R1, E1, Z](defExec)(f).flatMap(z => f(ScopedCase(ZIO.succeed(z))))
@@ -190,12 +190,12 @@ final case class Spec[-R, +E](caseValue: SpecCase[R, E, Spec[R, E]]) extends Spe
     foldScoped[R1, Nothing, Spec[R1, E1]](defExec) {
       case ExecCase(exec, spec)     => ZIO.succeed(Spec.exec(exec, spec))
       case LabeledCase(label, spec) => ZIO.succeed(Spec.labeled(label, spec))
-      case ScopedCase(scoped) =>
+      case ScopedCase(scoped)       =>
         scoped.foldCause(
           c => Spec.test(failure(c), TestAnnotationMap.empty),
           t => Spec.scoped(ZIO.succeed(t))
         )
-      case MultipleCase(specs) => ZIO.succeed(Spec.multiple(specs))
+      case MultipleCase(specs)         => ZIO.succeed(Spec.multiple(specs))
       case TestCase(test, annotations) =>
         test
           .foldCause(
@@ -322,7 +322,7 @@ final case class Spec[-R, +E](caseValue: SpecCase[R, E, Spec[R, E]]) extends Spe
     transform[R0, E1] {
       case ExecCase(exec, spec)     => ExecCase(exec, spec)
       case LabeledCase(label, spec) => LabeledCase(label, spec)
-      case ScopedCase(scoped) =>
+      case ScopedCase(scoped)       =>
         ScopedCase[R0, E1, Spec[R0, E1]](
           layer.mapError(TestFailure.fail).build.flatMap(r => scoped.provideSomeEnvironment[Scope](r.union[Scope](_)))
         )
@@ -339,7 +339,7 @@ final case class Spec[-R, +E](caseValue: SpecCase[R, E, Spec[R, E]]) extends Spe
     caseValue match {
       case ExecCase(exec, spec)     => Spec.exec(exec, spec.provideLayerShared(layer))
       case LabeledCase(label, spec) => Spec.labeled(label, spec.provideLayerShared(layer))
-      case ScopedCase(scoped) =>
+      case ScopedCase(scoped)       =>
         Spec.scoped[R0](
           layer
             .mapError(TestFailure.fail)
@@ -365,7 +365,7 @@ final case class Spec[-R, +E](caseValue: SpecCase[R, E, Spec[R, E]]) extends Spe
     transform[R0, E] {
       case ExecCase(exec, spec)     => ExecCase(exec, spec)
       case LabeledCase(label, spec) => LabeledCase(label, spec)
-      case ScopedCase(scoped) =>
+      case ScopedCase(scoped)       =>
         ScopedCase[R0, E, Spec[R0, E]](
           scoped.provideSomeEnvironment[R0 with Scope](in => f(in).add[Scope](in.get[Scope]))
         )
@@ -529,7 +529,7 @@ object Spec {
       self.caseValue match {
         case ExecCase(exec, spec)     => Spec.exec(exec, spec.provideSomeLayerShared(layer))
         case LabeledCase(label, spec) => Spec.labeled(label, spec.provideSomeLayerShared(layer))
-        case ScopedCase(scoped) =>
+        case ScopedCase(scoped)       =>
           Spec.scoped[R0](
             layer.mapError(TestFailure.fail).build.flatMap { r =>
               scoped

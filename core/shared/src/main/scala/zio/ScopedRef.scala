@@ -63,7 +63,7 @@ object ScopedRef {
     ZIO.uninterruptible {
       for {
         newScope <- Scope.make
-        a <-
+        a        <-
           acquire.provideSomeEnvironment[R](_.add[Scope](newScope)).onError(cause => newScope.close(Exit.fail(cause)))
         ref      <- Ref.Synchronized.make((newScope, a))
         scopedRef = Synch(ref)
@@ -86,7 +86,7 @@ object ScopedRef {
             _        <- oldScope.close(Exit.unit)
             newScope <- Scope.make
             exit     <- newScope.extend[R](acquire).exit
-            result <- exit match {
+            result   <- exit match {
                         case Exit.Failure(cause) =>
                           newScope.close(Exit.unit).as(Exit.failCause(cause) -> (oldScope -> a))
                         case Exit.Success(a) => ZIO.succeed(ZIO.unit -> (newScope -> a))

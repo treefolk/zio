@@ -308,7 +308,7 @@ object TRandom extends Serializable {
   )(implicit bf: BuildFrom[Collection[A], A, Collection[A]]): USTM[Collection[A]] =
     for {
       buffer <- TArray.fromIterable(collection)
-      swap = (i1: Int, i2: Int) =>
+      swap    = (i1: Int, i2: Int) =>
                for {
                  tmp <- buffer(i1)
                  _   <- buffer.updateSTM(i1, _ => buffer(i2))

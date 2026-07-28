@@ -396,7 +396,7 @@ object Hub {
         for {
           fiberId    <- ZIO.fiberId
           publishers <- ZIO.succeed(unsafePollAll(publishers))
-          _ <- ZIO.foreachParDiscard(publishers) { case (_, promise, last) =>
+          _          <- ZIO.foreachParDiscard(publishers) { case (_, promise, last) =>
                  if (last) promise.interruptAs(fiberId) else ZIO.unit
                }
         } yield ()

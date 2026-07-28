@@ -18,7 +18,7 @@ trait IntelliJRenderer extends TestRenderer {
       case SectionStart(labelsReversed, _, _) =>
         val depth = labelsReversed.length - 1
         labelsReversed.reverse match {
-          case Nil => Seq.empty
+          case Nil          => Seq.empty
           case nonEmptyList =>
             Seq(
               ExecutionResult.withoutSummarySpecificOutput(
@@ -36,8 +36,8 @@ trait IntelliJRenderer extends TestRenderer {
       case _: TestStarted => Nil
 
       case Test(labelsReversed, results, annotations, _, duration, _, _) =>
-        val labels       = labelsReversed.reverse
-        val initialDepth = labels.length - 1
+        val labels                           = labelsReversed.reverse
+        val initialDepth                     = labels.length - 1
         val (streamingOutput, summaryOutput) =
           testCaseOutput(labels, results, includeCause, annotations)
 
@@ -46,7 +46,7 @@ trait IntelliJRenderer extends TestRenderer {
             ResultType.Test,
             labels.lastOption.getOrElse(""),
             results match {
-              case Left(_) => Status.Failed
+              case Left(_)                   => Status.Failed
               case Right(value: TestSuccess) =>
                 value match {
                   case TestSuccess.Succeeded(_) => Status.Passed
@@ -71,7 +71,7 @@ trait IntelliJRenderer extends TestRenderer {
       case SectionEnd(labelsReversed, _, _) =>
         val depth = labelsReversed.length - 1
         labelsReversed.reverse match {
-          case Nil => Seq.empty
+          case Nil          => Seq.empty
           case nonEmptyList =>
             Seq(
               ExecutionResult.withoutSummarySpecificOutput(
@@ -92,8 +92,8 @@ trait IntelliJRenderer extends TestRenderer {
   override protected def renderOutput(results: Seq[ExecutionResult])(implicit trace: Trace): Seq[String] =
     results.foldLeft(List.empty[String]) { (acc, result) =>
       result match {
-        case r @ ExecutionResult(ResultType.Suite, _, Status.Started, _, _, _, _, _) => acc :+ onSuiteStarted(r)
-        case r @ ExecutionResult(ResultType.Suite, _, _, _, _, _, _, _)              => acc :+ onSuiteFinished(r)
+        case r @ ExecutionResult(ResultType.Suite, _, Status.Started, _, _, _, _, _)      => acc :+ onSuiteStarted(r)
+        case r @ ExecutionResult(ResultType.Suite, _, _, _, _, _, _, _)                   => acc :+ onSuiteFinished(r)
         case r @ ExecutionResult(ResultType.Test, _, Status.Passed, _, _, _, _, duration) =>
           acc :+ onTestStarted(r) :+ onTestFinished(r, duration)
         case r @ ExecutionResult(ResultType.Test, _, Status.Failed, _, _, _, _, _) =>

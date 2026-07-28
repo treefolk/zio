@@ -23,7 +23,7 @@ class CustomExecutorBenchmark {
 
   lazy val customRuntime = {
     implicit val unsafe: Unsafe = Unsafe.unsafe(identity)
-    val kExecutorLayer =
+    val kExecutorLayer          =
       Runtime.setExecutor(Runtime.defaultExecutor) ++
         Runtime.setBlockingExecutor(Runtime.defaultBlockingExecutor)
     Runtime.unsafe.fromLayer(kExecutorLayer)

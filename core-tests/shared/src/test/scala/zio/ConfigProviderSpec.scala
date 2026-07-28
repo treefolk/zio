@@ -4,7 +4,7 @@ import zio.test._
 import zio.test.Assertion._
 
 object ConfigProviderSpec extends ZIOBaseSpec {
-  def provider(map: Map[String, String]): ConfigProvider = ConfigProvider.fromMap(map)
+  def provider(map: Map[String, String]): ConfigProvider             = ConfigProvider.fromMap(map)
   def propsProvider(props: Map[String, String]): UIO[ConfigProvider] =
     ZIO
       .foreachDiscard(props) { case (key, value) =>
@@ -682,7 +682,7 @@ object ConfigProviderSpec extends ZIOBaseSpec {
         val animalType     = Config.string("animalType")
         val cat            = Config.string("name").map(Cat(_))
         val dog            = Config.string("name").map(Dog(_))
-        val animal = animalType.switch(
+        val animal         = animalType.switch(
           "cat" -> cat,
           "dog" -> dog
         )

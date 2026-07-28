@@ -11,7 +11,7 @@ inThisBuild(
   List(
     organization := "dev.zio",
     homepage     := Some(url("https://zio.dev")),
-    licenses := List(
+    licenses     := List(
       "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
     ),
     developers := List(
@@ -684,7 +684,7 @@ lazy val benchmarks = project.module
   )
   .settings(scalacOptions += "-Wconf:msg=[@nowarn annotation does not suppress any warnings]:silent")
   .settings(
-    assembly / assemblyJarName := "benchmarks.jar",
+    assembly / assemblyJarName       := "benchmarks.jar",
     assembly / assemblyMergeStrategy := {
       case PathList("module-info.class") => MergeStrategy.discard
       case path                          => MergeStrategy.defaultMergeStrategy(path)
@@ -745,7 +745,7 @@ lazy val scalafixTests = project
     scalafixSettings,
     publish / skip                        := true,
     libraryDependencies += "ch.epfl.scala" % "scalafix-testkit" % scalafixVersion % Test cross CrossVersion.full,
-    Compile / compile :=
+    Compile / compile                     :=
       (Compile / compile).dependsOn(scalafixInput / Compile / compile).value,
     scalafixTestkitOutputSourceDirectories :=
       (scalafixOutput / Compile / sourceDirectories).value,
@@ -803,8 +803,8 @@ lazy val docs = project.module
     scalacOptions ~= { _ filterNot (_ startsWith "-Ywarn") },
     scalacOptions ~= { _ filterNot (_ startsWith "-Xlint") },
     crossScalaVersions --= List(Scala212, Scala3),
-    mdocIn  := (LocalRootProject / baseDirectory).value / "docs",
-    mdocOut := (LocalRootProject / baseDirectory).value / "website" / "docs",
+    mdocIn                                     := (LocalRootProject / baseDirectory).value / "docs",
+    mdocOut                                    := (LocalRootProject / baseDirectory).value / "website" / "docs",
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(
       core.jvm,
       streams.jvm,

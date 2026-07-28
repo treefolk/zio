@@ -155,7 +155,7 @@ package capture {
       override def erase: FailureCont[Any, Any] = self.asInstanceOf[FailureCont[Any, Any]]
     }
 
-    case class Succeed[A](thunk: () => A) extends Task[A]
+    case class Succeed[A](thunk: () => A)                           extends Task[A]
     case class FlatMap[A, B](first: Task[A], andThen: A => Task[B]) extends Task[B] with Continuation[A, B] {
       def onSuccess(a: A): Task[B] = andThen(a)
     }
