@@ -249,7 +249,7 @@ sealed abstract class Fiber[+E, +A] { self =>
 
       final def children(implicit trace: Trace): UIO[Chunk[Fiber.Runtime[_, _]]] = self.children
 
-      def id: FiberId = self.id
+      def id: FiberId                                        = self.id
       final def inheritAll(implicit trace: Trace): UIO[Unit] =
         self.inheritAll
       final def interruptAsFork(id: FiberId)(implicit trace: Trace): UIO[Unit] =

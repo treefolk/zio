@@ -9,8 +9,8 @@ sealed trait TestDuration { self =>
 
   final def <>(that: TestDuration): TestDuration =
     (self, that) match {
-      case (Zero, right) => right
-      case (left, Zero)  => left
+      case (Zero, right)                                              => right
+      case (left, Zero)                                               => left
       case (Finite(leftStart, leftEnd), Finite(rightStart, rightEnd)) =>
         val start = if (leftStart.isBefore(rightStart)) leftStart else rightStart
         val end   = if (leftEnd.isAfter(rightEnd)) leftEnd else rightEnd

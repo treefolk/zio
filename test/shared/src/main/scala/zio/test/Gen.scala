@@ -263,7 +263,7 @@ object Gen extends GenZIO with FunctionVariants with TimeVariants {
         val byteLength = ((bitLength.toLong + 7) / 8).toInt
         val excessBits = byteLength * 8 - bitLength
         val mask       = (1 << (8 - excessBits)) - 1
-        val effect = nextBytes(byteLength).map { bytes =>
+        val effect     = nextBytes(byteLength).map { bytes =>
           val arr = bytes.toArray
           arr(0) = (arr(0) & mask).toByte
           min + BigInt(arr)
@@ -898,7 +898,7 @@ object Gen extends GenZIO with FunctionVariants with TimeVariants {
    * }}}
    */
   def weighted[R, A](gs: (Gen[R, A], Double)*)(implicit trace: Trace): Gen[R, A] = {
-    val sum = gs.map(_._2).sum
+    val sum      = gs.map(_._2).sum
     val (map, _) = gs.foldLeft((SortedMap.empty[Double, Gen[R, A]], 0.0)) { case ((map, acc), (gen, d)) =>
       if ((acc + d) / sum > acc / sum) (map.updated((acc + d) / sum, gen), acc + d)
       else (map, acc)

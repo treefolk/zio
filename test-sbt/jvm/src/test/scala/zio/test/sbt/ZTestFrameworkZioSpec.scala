@@ -107,7 +107,7 @@ object ZTestFrameworkZioSpec extends ZIOSpecDefault {
     ),
     test("displays multi-colored lines")(
       for {
-        _ <- loadAndExecuteAllZ(Seq(FrameworkSpecInstances.MultiLineSharedSpec))
+        _      <- loadAndExecuteAllZ(Seq(FrameworkSpecInstances.MultiLineSharedSpec))
         output <-
           testOutput
         expected =
@@ -123,8 +123,8 @@ object ZTestFrameworkZioSpec extends ZIOSpecDefault {
     ) @@ TestAspect.ignore,
     test("only executes selected test") {
       for {
-        _      <- loadAndExecute(FrameworkSpecInstances.SimpleFailingSharedSpec, testArgs = Array("-t", "passing test"))
-        output <- testOutput
+        _       <- loadAndExecute(FrameworkSpecInstances.SimpleFailingSharedSpec, testArgs = Array("-t", "passing test"))
+        output  <- testOutput
         expected =
           List(
             s"${green("+")} some suite\n",
@@ -135,8 +135,8 @@ object ZTestFrameworkZioSpec extends ZIOSpecDefault {
     },
     test("only execute test with specified tag") {
       for {
-        _      <- loadAndExecute(FrameworkSpecInstances.TagsSpec, testArgs = Array("-tags", "IntegrationTest"))
-        output <- testOutput
+        _       <- loadAndExecute(FrameworkSpecInstances.TagsSpec, testArgs = Array("-tags", "IntegrationTest"))
+        output  <- testOutput
         expected =
           List(
             s"${green("+")} tag suite\n",
@@ -146,8 +146,8 @@ object ZTestFrameworkZioSpec extends ZIOSpecDefault {
     } @@ TestAspect.flaky,
     test("do not execute test with ignored tag") {
       for {
-        _      <- loadAndExecute(FrameworkSpecInstances.TagsSpec, testArgs = Array("-ignore-tags", "IntegrationTest"))
-        output <- testOutput
+        _       <- loadAndExecute(FrameworkSpecInstances.TagsSpec, testArgs = Array("-ignore-tags", "IntegrationTest"))
+        output  <- testOutput
         expected =
           List(
             s"${green("+")} tag suite\n",
@@ -157,7 +157,7 @@ object ZTestFrameworkZioSpec extends ZIOSpecDefault {
     }
   )
 
-  private val durationPattern = "Executed in (\\d+) (.*)".r
+  private val durationPattern                                              = "Executed in (\\d+) (.*)".r
   private def extractTestRunDuration(output: Vector[String]): zio.Duration = {
     val (testTimeNumber, testTimeUnit) = output.mkString
       .split("\n")
@@ -196,7 +196,7 @@ object ZTestFrameworkZioSpec extends ZIOSpecDefault {
         .toArray
 
     for {
-      testC <- testConsole
+      testC  <- testConsole
       tasksZ <-
         ZIO
           .attemptBlocking(

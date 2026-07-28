@@ -46,7 +46,7 @@ class ZIOTestClassRunner(descriptor: ZIOTestClassDescriptor) {
       ): Spec.SpecCase[R, E, Spec[R, E]] =
         spec.caseValue match {
           case Spec.ExecCase(exec, spec: Spec[R, E]) => Spec.ExecCase(exec, Spec(loop(spec, description, path)))
-          case Spec.LabeledCase(label, spec) =>
+          case Spec.LabeledCase(label, spec)         =>
             Spec.LabeledCase(label, Spec(loop(spec, description, path :+ label)))
           case Spec.ScopedCase(scoped) =>
             Spec.ScopedCase[R, E, Spec[R, E]](scoped.map(spec => Spec(loop(spec, description, path))))

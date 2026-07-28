@@ -105,10 +105,10 @@ object ZKeyedPool {
     trace: Trace
   ): ZIO[Env with Scope, Nothing, ZKeyedPool[Err, Key, Item]] =
     for {
-      environment <- ZIO.environment[Env]
-      fiberId     <- ZIO.fiberId
-      map         <- ZIO.succeed(Platform.newConcurrentMap[Key, MapValue[Err, Item]]()(Unsafe.unsafe))
-      scope       <- ZIO.scope
+      environment    <- ZIO.environment[Env]
+      fiberId        <- ZIO.fiberId
+      map            <- ZIO.succeed(Platform.newConcurrentMap[Key, MapValue[Err, Item]]()(Unsafe.unsafe))
+      scope          <- ZIO.scope
       getOrCreatePool = (key: Key) =>
                           ZIO.suspendSucceed {
                             var value = map.get(key)

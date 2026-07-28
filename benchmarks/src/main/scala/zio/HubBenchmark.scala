@@ -297,7 +297,7 @@ class HubBenchmarks {
               for {
                 key   <- Resource.eval(cstm.commit(key.get.flatMap(n => key.modify(_ + 1).as(n))))
                 queue <- Resource.eval(cstm.commit(CatsTQueue.empty[A]))
-                _ <-
+                _     <-
                   Resource.make(cstm.commit(ref.modify(_.updated(key, queue))))(_ => cstm.commit(ref.modify(_ - key)))
               } yield n => catsRepeat(n)(cstm.commit(queue.read))
           }
@@ -318,9 +318,9 @@ class HubBenchmarks {
   def catsParallel(makeHub: CIO[CatsHubLike[Int]]): Int = {
 
     val io = for {
-      ref      <- CIO.ref(subscriberParallelism)
-      deferred <- CIO.deferred[Unit]
-      hub      <- makeHub
+      ref         <- CIO.ref(subscriberParallelism)
+      deferred    <- CIO.deferred[Unit]
+      hub         <- makeHub
       subscribers <- catsForkAll(List.fill(subscriberParallelism)(hub.subscribe.use { take =>
                        ref.modify { n =>
                          if (n == 1) (n - 1, deferred.complete(()))
@@ -340,10 +340,10 @@ class HubBenchmarks {
     import cats.effect._
 
     val io = for {
-      ref       <- IO.ref(subscriberParallelism)
-      deferred1 <- Deferred[IO, Unit]
-      deferred2 <- Deferred[IO, Unit]
-      hub       <- makeHub
+      ref         <- IO.ref(subscriberParallelism)
+      deferred1   <- Deferred[IO, Unit]
+      deferred2   <- Deferred[IO, Unit]
+      hub         <- makeHub
       subscribers <- catsForkAll(List.fill(subscriberParallelism)(hub.subscribe.use { take =>
                        ref.modify { n =>
                          if (n == 1) (n - 1, deferred1.complete(()))
@@ -364,9 +364,9 @@ class HubBenchmarks {
   def zioParallel(makeHub: UIO[ZIOHubLike[Int]]): Int = {
 
     val io = for {
-      ref     <- Ref.make(subscriberParallelism)
-      promise <- Promise.make[Nothing, Unit]
-      hub     <- makeHub
+      ref         <- Ref.make(subscriberParallelism)
+      promise     <- Promise.make[Nothing, Unit]
+      hub         <- makeHub
       subscribers <- zioForkAll(List.fill(subscriberParallelism)(ZIO.scoped(hub.subscribe.flatMap { take =>
                        promise.succeed(()).whenZIO(ref.updateAndGet(_ - 1).map(_ == 0)) *>
                          take(totalSize)
@@ -382,10 +382,10 @@ class HubBenchmarks {
   def zioSequential(makeHub: UIO[ZIOHubLike[Int]]): Int = {
 
     val io = for {
-      ref      <- Ref.make(subscriberParallelism)
-      promise1 <- Promise.make[Nothing, Unit]
-      promise2 <- Promise.make[Nothing, Unit]
-      hub      <- makeHub
+      ref         <- Ref.make(subscriberParallelism)
+      promise1    <- Promise.make[Nothing, Unit]
+      promise2    <- Promise.make[Nothing, Unit]
+      hub         <- makeHub
       subscribers <- zioForkAll(List.fill(subscriberParallelism)(ZIO.scoped(hub.subscribe.flatMap { take =>
                        promise1.succeed(()).whenZIO(ref.updateAndGet(_ - 1).map(_ == 0)) *>
                          promise2.await *>

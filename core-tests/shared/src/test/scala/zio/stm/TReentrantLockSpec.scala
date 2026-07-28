@@ -74,8 +74,8 @@ object TReentrantLockSpec extends ZIOBaseSpec {
     } @@ timeout(10.seconds) @@ flaky,
     test("write lock followed by read lock from same fiber") {
       for {
-        lock <- TReentrantLock.make.commit
-        ref  <- Ref.make(0)
+        lock   <- TReentrantLock.make.commit
+        ref    <- Ref.make(0)
         rcount <- ZIO.scoped(
                     lock.writeLock
                       .flatMap(_ =>
@@ -87,8 +87,8 @@ object TReentrantLockSpec extends ZIOBaseSpec {
     },
     test("upgrade read lock to write lock from same fiber") {
       for {
-        lock <- TReentrantLock.make.commit
-        ref  <- Ref.make(0)
+        lock   <- TReentrantLock.make.commit
+        ref    <- Ref.make(0)
         rcount <- ZIO.scoped(
                     lock.readLock
                       .flatMap(_ =>

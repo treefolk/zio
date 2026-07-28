@@ -37,7 +37,7 @@ object CheckSpec extends ZIOBaseSpec {
       val gen = Gen.listOfN(10)(Gen.int(-10, 10))
       for {
         ref <- Ref.make(0)
-        _ <- check(gen <*> gen) { _ =>
+        _   <- check(gen <*> gen) { _ =>
                for {
                  _ <- ref.update(_ + 1)
                  p <- Random.nextIntBounded(10).map(_ != 0)

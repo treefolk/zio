@@ -41,7 +41,7 @@ object TestSpec extends ZIOBaseSpec {
       } yield assert(result)(equalTo("succeed"))
     },
     test("test suspends effects") {
-      var n = 0
+      var n    = 0
       val spec = suite("suite")(
         test("test1") {
           n += 1

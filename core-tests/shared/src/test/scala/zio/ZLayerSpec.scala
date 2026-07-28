@@ -178,7 +178,7 @@ object ZLayerSpec extends ZIOBaseSpec {
           layer1 = makeLayer1(ref)
           layer2 = makeLayer2(ref)
           layer3 = makeLayer3(ref)
-          env =
+          env    =
             ((layer1.mapError(identity) >>> layer2) ++ (layer1 >>> layer3)).build
           _      <- ZIO.scoped(env)
           actual <- ref.get
@@ -244,7 +244,7 @@ object ZLayerSpec extends ZIOBaseSpec {
         for {
           promise <- Promise.make[Nothing, Unit]
           layer1   = ZLayer(ZIO.never)
-          layer2 =
+          layer2   =
             ZLayer.scoped(ZIO.acquireRelease(promise.succeed(()).map(ZEnvironment(_)))(_ => ZIO.unit))
           env = (layer1 ++ layer2).build
           _  <- ZIO.scoped(env).forkDaemon
@@ -264,7 +264,7 @@ object ZLayerSpec extends ZIOBaseSpec {
         for {
           ref     <- makeRef
           memoized = makeLayer1(ref).memoize
-          _ <- ZIO.scoped {
+          _       <- ZIO.scoped {
                  memoized.flatMap { layer =>
                    for {
                      _ <- ZIO.environment[Service1].provideLayer(layer)
@@ -351,7 +351,7 @@ object ZLayerSpec extends ZIOBaseSpec {
           ref   <- makeRef
           layer1 = makeLayer1(ref)
           layer2 = makeLayer2(ref)
-          _ <- (ZIO.service[Service1] *> ZIO.service[Service2])
+          _     <- (ZIO.service[Service1] *> ZIO.service[Service2])
                  .provide(layer1.fresh.map(identity).update(a => a), layer2)
           result <- ref.get
         } yield assert(result)(hasSameElements(Vector("1", "1", "2")))
@@ -359,7 +359,7 @@ object ZLayerSpec extends ZIOBaseSpec {
       test("preserves identity of acquired resources") {
         for {
           testRef <- Ref.make(Vector[String]())
-          layer =
+          layer    =
             ZLayer.scoped {
               for {
                 ref <-
@@ -505,8 +505,8 @@ object ZLayerSpec extends ZIOBaseSpec {
       },
       test("extend scope") {
         for {
-          ref  <- Ref.make[Vector[String]](Vector.empty)
-          layer = makeLayer1(ref).extendScope
+          ref     <- Ref.make[Vector[String]](Vector.empty)
+          layer    = makeLayer1(ref).extendScope
           acquire <- ZIO.scoped {
                        for {
                          _       <- ZIO.unit.provideLayer(layer)
@@ -522,7 +522,7 @@ object ZLayerSpec extends ZIOBaseSpec {
         final case class Counter(ref: AtomicInteger) {
           def getAndIncrement: UIO[Int] = ZIO.succeed(ref.getAndIncrement())
         }
-        val layer = ZLayer.succeed(Counter(new AtomicInteger(0)))
+        val layer                                       = ZLayer.succeed(Counter(new AtomicInteger(0)))
         def getAndIncrement: ZIO[Counter, Nothing, Int] =
           ZIO.serviceWithZIO(_.getAndIncrement)
         for {
@@ -563,7 +563,7 @@ object ZLayerSpec extends ZIOBaseSpec {
           assertTrue(RuntimeFlags.isEnabled(runtimeFlags)(RuntimeFlag.OpLog))
       } @@ exceptJS(nonFlaky),
       test("suspend lazily constructs a layer") {
-        var n = 0
+        var n     = 0
         val layer = ZLayer.suspend {
           n += 1
           ZLayer.empty

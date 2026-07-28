@@ -72,7 +72,7 @@ object NonEmptyChunkSpec extends ZIOBaseSpec {
     },
     suite("unapplySeq")(
       test("matches a nonempty chunk") {
-        val chunk = Chunk(1, 2, 3)
+        val chunk  = Chunk(1, 2, 3)
         val actual = chunk match {
           case NonEmptyChunk(x, y, z) => Some((x, y, z))
           case _                      => None
@@ -81,7 +81,7 @@ object NonEmptyChunkSpec extends ZIOBaseSpec {
         assert(actual)(equalTo(expected))
       },
       test("does not match an empty chunk") {
-        val chunk = Chunk.empty
+        val chunk  = Chunk.empty
         val actual = chunk match {
           case NonEmptyChunk(x, y, z) => Some((x, y, z))
           case _                      => None
@@ -100,7 +100,7 @@ object NonEmptyChunkSpec extends ZIOBaseSpec {
       },
       test("matches a NonEmptyChunk") {
         val nonEmptyChunk = NonEmptyChunk(1, 2, 3)
-        val actual = nonEmptyChunk match {
+        val actual        = nonEmptyChunk match {
           case NonEmptyChunk(x, y, z) => Some((x, y, z))
           case _                      => None
         }

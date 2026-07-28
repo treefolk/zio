@@ -89,7 +89,7 @@ object GenOrderingPoly {
       unit
     )
     val constructors = Gen.elements(list _, option _, vector _)
-    val collections = for {
+    val collections  = for {
       constructor <- constructors
       primitive   <- primitives
     } yield constructor(primitive)
@@ -159,9 +159,9 @@ object GenOrderingPoly {
     @tailrec
     def loop[A: Ordering](left: List[A], right: List[A]): Int =
       (left, right) match {
-        case (Nil, Nil) => 0
-        case (Nil, _)   => -1
-        case (_, Nil)   => +1
+        case (Nil, Nil)               => 0
+        case (Nil, _)                 => -1
+        case (_, Nil)                 => +1
         case ((h1 :: t1), (h2 :: t2)) =>
           val compare = Ordering[A].compare(h1, h2)
           if (compare == 0) loop(t1, t2) else compare

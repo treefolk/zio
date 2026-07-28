@@ -68,7 +68,7 @@ object SpecSpec extends ZIOBaseSpec {
         val fiberRef = FiberRef.unsafe.make(0)(Unsafe.unsafe)
         val inner    = ZLayer.scoped(ZIO.acquireRelease(fiberRef.set(1))(_ => fiberRef.set(-1)))
         val outer    = ZLayer.scoped(ZIO.acquireRelease(fiberRef.set(2))(_ => fiberRef.set(-2)))
-        val spec = suite("suite")(
+        val spec     = suite("suite")(
           test("test") {
             for {
               value <- fiberRef.get
@@ -178,7 +178,7 @@ object SpecSpec extends ZIOBaseSpec {
           release   = ref.update("Releasing" :: _)
           update    = ZIO.service[Ref[Int]].flatMap(_.updateAndGet(_ + 1))
           specLayer = ZLayer.scoped(ZIO.acquireRelease(acquire *> Ref.make(0))(_ => release))
-          spec = suite("spec")(
+          spec      = suite("spec")(
                    suite("suite1")(
                      test("test1") {
                        assertZIO(update)(equalTo(1))

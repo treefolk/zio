@@ -195,13 +195,13 @@ object ScheduleSpec extends ZIOBaseSpec {
         assertZIO(TestRandom.feedDoubles(0.5, 0.5, 1, 1, 0.5) *> scheduled)(equalTo(expected))
       },
       test("fixed delay with error predicate") {
-        var i = 0
+        var i  = 0
         val io = ZIO.succeed(i += 1).flatMap[Any, String, Unit] { _ =>
           if (i < 5) ZIO.fail("KeepTryingError") else ZIO.fail("GiveUpError")
         }
         val strategy = Schedule.spaced(200.millis).whileInput[String](_ == "KeepTryingError")
         val expected = (800.millis, "GiveUpError", 4L)
-        val result = io.retryOrElseEither(
+        val result   = io.retryOrElseEither(
           strategy,
           (e: String, r: Long) => Clock.nanoTime.map(nanos => (Duration.fromNanos(nanos), e, r))
         )
@@ -722,10 +722,10 @@ object ScheduleSpec extends ZIOBaseSpec {
       acc: List[(OffsetDateTime, Out)]
     ): ZIO[Env, Nothing, (List[(OffsetDateTime, Out)], Option[Out])] =
       inputs match {
-        case Nil => ZIO.succeed(acc.reverse -> None)
+        case Nil               => ZIO.succeed(acc.reverse -> None)
         case (odt, in) :: rest =>
           schedule.step(odt, in, state) flatMap {
-            case (_, out, Schedule.Decision.Done) => ZIO.succeed(acc.reverse -> Some(out))
+            case (_, out, Schedule.Decision.Done)                   => ZIO.succeed(acc.reverse -> Some(out))
             case (state, out, Schedule.Decision.Continue(interval)) =>
               loop(state, rest, (interval.start -> out) :: acc)
           }

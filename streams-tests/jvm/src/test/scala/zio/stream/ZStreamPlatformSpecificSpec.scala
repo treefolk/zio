@@ -50,7 +50,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
           for {
             refCnt  <- Ref.make(0)
             refDone <- Ref.make[Boolean](false)
-            stream = ZStream.asyncMaybe[Any, Throwable, Int](
+            stream   = ZStream.asyncMaybe[Any, Throwable, Int](
                        cb => {
                          global.execute { () =>
                            // 1st consumed by sink, 2-6 – in queue, 7th – back pressured
@@ -99,7 +99,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
           for {
             refCnt  <- Ref.make(0)
             refDone <- Ref.make[Boolean](false)
-            stream = ZStream.asyncZIO[Any, Throwable, Int](
+            stream   = ZStream.asyncZIO[Any, Throwable, Int](
                        cb => {
                          global.execute { () =>
                            // 1st consumed by sink, 2-6 – in queue, 7th – back pressured
@@ -148,7 +148,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
           for {
             refCnt  <- Ref.make(0)
             refDone <- Ref.make[Boolean](false)
-            stream = ZStream.asyncScoped[Any, Throwable, Int](
+            stream   = ZStream.asyncScoped[Any, Throwable, Int](
                        cb => {
                          global.execute { () =>
                            // 1st consumed by sink, 2-6 – in queue, 7th – back pressured
@@ -171,7 +171,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
           for {
             cancelled <- Ref.make(false)
             latch     <- Promise.make[Nothing, Unit]
-            fiber <- ZStream
+            fiber     <- ZStream
                        .asyncInterrupt[Any, Nothing, Unit] { offer =>
                          global.execute(() => offer(ZIO.succeed(Chunk.unit)))
                          Left(cancelled.set(true))
@@ -204,7 +204,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
             selfId  <- ZIO.fiberId
             refCnt  <- Ref.make(0)
             refDone <- Ref.make[Boolean](false)
-            stream = ZStream.asyncInterrupt[Any, Throwable, Int](
+            stream   = ZStream.asyncInterrupt[Any, Throwable, Int](
                        cb => {
                          global.execute { () =>
                            // 1st consumed by sink, 2-6 – in queue, 7th – back pressured
@@ -264,7 +264,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
     suite("fromSocketServer")(
       test("read data") {
         for {
-          messages <- Gen.listOf1(Gen.byte).map(_.toArray).runCollectN(200)
+          messages     <- Gen.listOf1(Gen.byte).map(_.toArray).runCollectN(200)
           readMessages <- ZStream
                             .fromSocketServer(8896)
                             .zip(ZStream.scoped(socketClient(8896)))
@@ -288,7 +288,7 @@ object ZStreamPlatformSpecificSpec extends ZIOBaseSpec {
       },
       test("write data") {
         for {
-          messages <- Gen.listOf1(Gen.byte).map(_.toArray).runCollectN(200)
+          messages        <- Gen.listOf1(Gen.byte).map(_.toArray).runCollectN(200)
           writtenMessages <- ZStream
                                .fromSocketServer(8897)
                                .zip(ZStream.scoped(socketClient(8897)))

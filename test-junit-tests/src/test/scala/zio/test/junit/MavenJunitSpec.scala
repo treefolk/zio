@@ -102,8 +102,8 @@ object MavenJunitSpec extends ZIOSpecDefault {
 
   }
 
-  def containsSuccess(label: String): Assertion[Iterable[TestCase]]                = containsResult(label, error = None)
-  def containsFailure(label: String, error: String): Assertion[Iterable[TestCase]] = containsResult(label, Some(error))
+  def containsSuccess(label: String): Assertion[Iterable[TestCase]]                       = containsResult(label, error = None)
+  def containsFailure(label: String, error: String): Assertion[Iterable[TestCase]]        = containsResult(label, Some(error))
   def containsResult(label: String, error: Option[String]): Assertion[Iterable[TestCase]] =
     exists(assertion(s"check $label") { testCase =>
       testCase.name == label &&

@@ -54,7 +54,7 @@ private[zio] object CleanCodePrinter {
       case Throw(tree)         => Throw(clean(c)(tree, ctx))
       case New(tree)           => New(clean(c)(tree, ctx))
       case CaseDef(t1, t2, t3) => CaseDef(clean(c)(t1, ctx), clean(c)(t2, ctx), clean(c)(t3, ctx))
-      case Match(tree, cases) =>
+      case Match(tree, cases)  =>
         Match(
           clean(c)(tree, ctx),
           cases.map { cd =>
@@ -63,12 +63,12 @@ private[zio] object CleanCodePrinter {
             }
           }
         )
-      case Block(trees, tree) => Block(trees.map(clean(c)(_, ctx)), clean(c)(tree, ctx))
-      case If(t1, t2, t3)     => If(clean(c)(t1, ctx), clean(c)(t2, ctx), clean(c)(t3, ctx))
-      case Bind(n, t)         => Bind(n, clean(c)(t, ctx))
+      case Block(trees, tree)   => Block(trees.map(clean(c)(_, ctx)), clean(c)(tree, ctx))
+      case If(t1, t2, t3)       => If(clean(c)(t1, ctx), clean(c)(t2, ctx), clean(c)(t3, ctx))
+      case Bind(n, t)           => Bind(n, clean(c)(t, ctx))
       case Function(vals, tree) =>
         val (synthetic, nonSynthetic) = vals.partition(_.mods.hasFlag(Flag.SYNTHETIC))
-        val newArgs =
+        val newArgs                   =
           if (nonSynthetic.isEmpty) List(ValDef(Modifiers(Flag.PARAM), TermName(magicArg), EmptyTree, EmptyTree))
           else cleanValDefs(c)(nonSynthetic)
         Function(

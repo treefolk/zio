@@ -19,7 +19,7 @@ object TestClockSpecJVM extends ZIOBaseSpec {
             clock                   <- ZIO.clock
             scheduler               <- ZIO.blocking(Clock.scheduler)
             scheduledExecutorService = scheduler.asScheduledExecutorService
-            _ <- ZIO.succeed {
+            _                       <- ZIO.succeed {
                    scheduledExecutorService.scheduleAtFixedRate(
                      new Runnable {
                        def run(): Unit =
@@ -46,7 +46,7 @@ object TestClockSpecJVM extends ZIOBaseSpec {
             clock                   <- ZIO.clock
             scheduler               <- ZIO.blocking(Clock.scheduler)
             scheduledExecutorService = scheduler.asScheduledExecutorService
-            _ <- ZIO.succeed {
+            _                       <- ZIO.succeed {
                    scheduledExecutorService.scheduleAtFixedRate(
                      new Runnable {
                        def run(): Unit =
@@ -73,7 +73,7 @@ object TestClockSpecJVM extends ZIOBaseSpec {
             clock                   <- ZIO.clock
             scheduler               <- ZIO.blocking(Clock.scheduler)
             scheduledExecutorService = scheduler.asScheduledExecutorService
-            _ <- ZIO.succeed {
+            _                       <- ZIO.succeed {
                    scheduledExecutorService.scheduleWithFixedDelay(
                      new Runnable {
                        def run(): Unit =
@@ -101,7 +101,7 @@ object TestClockSpecJVM extends ZIOBaseSpec {
             scheduler               <- ZIO.blocking(Clock.scheduler)
             scheduledExecutorService = scheduler.asScheduledExecutorService
             promise                 <- Promise.make[Nothing, Unit]
-            future <- ZIO.succeed {
+            future                  <- ZIO.succeed {
                         scheduledExecutorService.scheduleAtFixedRate(
                           new Runnable {
                             def run(): Unit =

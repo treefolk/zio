@@ -81,7 +81,7 @@ object RefSynchronizedSpec extends ZIOBaseSpec {
           ref    <- Ref.Synchronized.make[State](Active)
           r1     <- ref.modifySomeZIO("doesn't change the state") { case Active => ZIO.succeed("changed" -> Changed) }
           value1 <- ref.get
-          r2 <- ref.modifySomeZIO("doesn't change the state") {
+          r2     <- ref.modifySomeZIO("doesn't change the state") {
                   case Active  => ZIO.succeed("changed" -> Changed)
                   case Changed => ZIO.succeed("closed" -> Closed)
                 }
@@ -101,7 +101,7 @@ object RefSynchronizedSpec extends ZIOBaseSpec {
       test("modifySome with failure not triggered") {
         for {
           ref <- Ref.Synchronized.make[State](Active)
-          r <-
+          r   <-
             ref.modifySomeZIO("State doesn't change") { case Closed => ZIO.fail(failure) }.orDieWith(new Exception(_))
           value <- ref.get
         } yield assert(r)(equalTo("State doesn't change")) && assert(value)(equalTo(Active))

@@ -10,8 +10,8 @@ object ZKeyedPoolSpec extends ZIOBaseSpec {
     suite("ZKeyedPoolSpec")(
       test("acquire release many successfully while other key is blocked") {
         for {
-          pool <- ZKeyedPool.make((key: String) => ZIO.succeed(key), size = 4)
-          _    <- pool.get("key1").repeatN(3).unit
+          pool  <- ZKeyedPool.make((key: String) => ZIO.succeed(key), size = 4)
+          _     <- pool.get("key1").repeatN(3).unit
           fiber <-
             ZIO
               .foreachParDiscard(1 to nPar) { _ =>
@@ -28,7 +28,7 @@ object ZKeyedPoolSpec extends ZIOBaseSpec {
         for {
           counter <- Ref.make(0)
           pool    <- ZKeyedPool.make((key: String) => counter.modify(n => (s"$key-$n", n + 1)), size = 4)
-          fiber <-
+          fiber   <-
             ZIO
               .foreachParDiscard(1 to nPar) { _ =>
                 ZIO.scoped {

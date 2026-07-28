@@ -14,7 +14,7 @@ object ScopeSpec extends ZIOBaseSpec {
       test("runs finalizers when scope is closed") {
         for {
           ref <- Ref.make[Chunk[Action]](Chunk.empty)
-          _ <- ZIO.scoped {
+          _   <- ZIO.scoped {
                  for {
                    resource <- resource(1)(ref)
                    _        <- ref.update(_ :+ Action.Use(resource))
@@ -30,7 +30,7 @@ object ScopeSpec extends ZIOBaseSpec {
       test("runs finalizers when scope is closed") {
         for {
           ref <- Ref.make[Chunk[Action]](Chunk.empty)
-          _ <- ZIO.scoped {
+          _   <- ZIO.scoped {
                  for {
                    tuple <- ZIO.parallelFinalizers {
                               resource(1)(ref).zipPar(resource(2)(ref))
@@ -47,7 +47,7 @@ object ScopeSpec extends ZIOBaseSpec {
       test("runs finalizers in parallel") {
         for {
           promise <- Promise.make[Nothing, Unit]
-          _ <- ZIO.scoped {
+          _       <- ZIO.scoped {
                  ZIO.parallelFinalizers {
                    ZIO.addFinalizer(promise.succeed(())) *> ZIO.addFinalizer(promise.await)
                  }
@@ -59,7 +59,7 @@ object ScopeSpec extends ZIOBaseSpec {
       for {
         ref1 <- Ref.make[Chunk[Action]](Chunk.empty)
         ref2 <- Ref.make[Chunk[Action]](Chunk.empty)
-        _ <- ZIO.scoped {
+        _    <- ZIO.scoped {
                for {
                  _ <- ZIO.using(resource(1)(ref1)) { _ =>
                         ref1.update(_ :+ Action.Use(1)) *>

@@ -156,7 +156,7 @@ package object laws {
       ZLawsF2.Divariant[CapsBoth, CapsLeft, CapsRight, Any]
 
     object Divariant {
-      type ComposeLaw[-CapsBothF[_[-_, +_]], -Caps[_]] = ZLawsF2.Divariant.ComposeLaw[CapsBothF, Caps]
+      type ComposeLaw[-CapsBothF[_[-_, +_]], -Caps[_]]             = ZLawsF2.Divariant.ComposeLaw[CapsBothF, Caps]
       type Law1[CapsBothF[_[-_, +_]], -CapsLeft[_], -CapsRight[_]] =
         ZLawsF2.Divariant.Law1[CapsBothF, CapsLeft, CapsRight]
     }

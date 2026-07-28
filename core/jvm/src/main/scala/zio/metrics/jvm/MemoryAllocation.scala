@@ -78,7 +78,7 @@ object MemoryAllocation {
             runtime                 <- ZIO.runtime[Any]
             listener                 = new Listener(runtime)
             garbageCollectorMXBeans <- ZIO.attempt(ManagementFactory.getGarbageCollectorMXBeans.asScala.toList)
-            _ <- ZIO.foreachDiscard(garbageCollectorMXBeans) {
+            _                       <- ZIO.foreachDiscard(garbageCollectorMXBeans) {
                    case emitter: NotificationEmitter =>
                      ZIO.attempt(emitter.addNotificationListener(listener, null, null))
                    case _ => ZIO.unit

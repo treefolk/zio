@@ -71,7 +71,7 @@ sealed trait FiberId extends Serializable { self =>
     sb.append("zio-fiber-")
     self match {
       case rt: Runtime => sb.append(rt.id) // Avoid boxing of the Int
-      case fid =>
+      case fid         =>
         val it   = fid.ids.iterator
         var loop = it.hasNext
         while (loop) {
@@ -135,7 +135,7 @@ object FiberId {
       id match {
         case None                  => TailCalls.done(Set.empty[FiberId.Runtime])
         case id @ Runtime(_, _, _) => TailCalls.done(Set(id))
-        case Composite(l, r) =>
+        case Composite(l, r)       =>
           for {
             lSet <- TailCalls.tailcall(go(l))
             rSet <- TailCalls.tailcall(go(r))
@@ -172,7 +172,7 @@ object FiberId {
      * cases that rely on strict ordering of fibers (e.g., in zio-test)
      */
     object Monotonic extends Gen {
-      private[this] val counter = new java.util.concurrent.atomic.AtomicInteger(0)
+      private[this] val counter                                           = new java.util.concurrent.atomic.AtomicInteger(0)
       def make(location: Trace)(implicit unsafe: Unsafe): FiberId.Runtime =
         FiberId.Runtime(counter.getAndIncrement(), java.lang.System.currentTimeMillis(), location)
     }

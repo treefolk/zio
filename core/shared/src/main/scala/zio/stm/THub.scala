@@ -168,7 +168,7 @@ object THub {
                 strategy match {
                   case Strategy.BackPressure => throw ZSTM.RetryException
                   case Strategy.Dropping     => false
-                  case Strategy.Sliding =>
+                  case Strategy.Sliding      =>
                     if (capacity > 0) {
                       var currentPublisherHead = publisherHead.unsafeGet(journal)
                       var loop                 = true

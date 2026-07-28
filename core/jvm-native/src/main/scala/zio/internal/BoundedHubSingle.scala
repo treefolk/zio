@@ -58,7 +58,7 @@ private final class BoundedHubSingle[A] extends Hub[A] {
         loop = false
       } else {
         val currentPublisherIndex = currentState.publisherIndex
-        val updatedState = currentState.copy(
+        val updatedState          = currentState.copy(
           publisherIndex = currentPublisherIndex + 1,
           subscribers = currentSubscriberCount,
           value = a
@@ -200,7 +200,7 @@ private final class BoundedHubSingle[A] extends Hub[A] {
             val currentPublisherIndex  = currentState.publisherIndex
             val currentSubscriberCount = currentState.subscriberCount
             val currentSubscribers     = currentState.subscribers
-            val updatedState =
+            val updatedState           =
               if (currentSubscribers == 0 || currentSubscriberIndex == currentPublisherIndex) {
                 currentState.copy(subscriberCount = currentSubscriberCount - 1)
               } else if (currentSubscribers == 1) {

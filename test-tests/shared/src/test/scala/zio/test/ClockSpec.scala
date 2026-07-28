@@ -197,7 +197,7 @@ object ClockSpec extends ZIOBaseSpec {
 
   class ScopedExecutor extends Executor {
     @volatile private var closed = false
-    def close(): Unit =
+    def close(): Unit            =
       closed = true
     def metrics(implicit unsafe: Unsafe): Option[ExecutionMetrics] =
       None

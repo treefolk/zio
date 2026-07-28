@@ -110,7 +110,7 @@ private[zio] class ConcurrentWeakHashSet[V](
   private val segments: Array[Segment] = {
     val size                     = 1 << shift
     val roundedUpSegmentCapacity = ((this.initialCapacity + size - 1L) / size).toInt
-    val initialSize =
+    val initialSize              =
       1 << ConcurrentWeakHashSet.calculateShift(roundedUpSegmentCapacity, ConcurrentWeakHashSet.MaxSegmentSize)
     val segments        = new Array[Segment](size)
     val resizeThreshold = (initialSize * this.loadFactor).toInt

@@ -91,7 +91,7 @@ private[zio] final class UpdateOrderLinkedMap[K, +V](
 
   @transient
   private[this] lazy val iteratorLz: LzList[(K, V)] = {
-    val it = iterator0
+    val it                     = iterator0
     def loop(): LzList[(K, V)] =
       if (it.hasNext) LzList(it.next(), loop()) else LzList.empty
     loop()
@@ -105,7 +105,7 @@ private[zio] final class UpdateOrderLinkedMap[K, +V](
     final private[this] def findNextKey(nextSlot: Int): K =
       fields(nextSlot) match {
         case Tombstone(d) => findNextKey(nextSlot + d)
-        case k =>
+        case k            =>
           slot = nextSlot
           k.asInstanceOf[K]
       }
@@ -124,7 +124,7 @@ private[zio] final class UpdateOrderLinkedMap[K, +V](
 
   @transient
   private[this] lazy val reverseIteratorLz: LzList[(K, V)] = {
-    val it = reverseIterator0
+    val it                     = reverseIterator0
     def loop(): LzList[(K, V)] =
       if (it.hasNext) LzList(it.next(), loop()) else LzList.empty
 
@@ -141,7 +141,7 @@ private[zio] final class UpdateOrderLinkedMap[K, +V](
         case Tombstone(d) if d < 0  => findNextKey(nextSlot + d)
         case Tombstone(d) if d == 1 => findNextKey(nextSlot - 1)
         case Tombstone(d)           => throw new IllegalStateException("tombstone indicate wrong position: " + d)
-        case k =>
+        case k                      =>
           remaining -= 1
           slot = nextSlot
           k.asInstanceOf[K]

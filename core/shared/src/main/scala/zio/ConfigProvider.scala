@@ -269,8 +269,8 @@ object ConfigProvider {
 
         def enumerateChildren(path: Chunk[String])(implicit trace: Trace): IO[Config.Error, Set[String]] =
           for {
-            l <- ZIO.fromEither(self.patch(path)).flatMap(self.enumerateChildren).either
-            r <- ZIO.fromEither(that.patch(path)).flatMap(that.enumerateChildren).either
+            l      <- ZIO.fromEither(self.patch(path)).flatMap(self.enumerateChildren).either
+            r      <- ZIO.fromEither(that.patch(path)).flatMap(that.enumerateChildren).either
             result <- (l, r) match {
                         case (Left(e1), Left(e2)) => ZIO.fail(e1 && e2)
                         case (Left(_), Right(r))  => ZIO.succeed(r)
@@ -625,7 +625,7 @@ object ConfigProvider {
 
         for {
           valueOpt <- zio.System.env(pathString).mapError(sourceUnavailable(path))
-          value <-
+          value    <-
             ZIO
               .fromOption(valueOpt)
               .mapError(_ => Config.Error.MissingData(path, s"Expected ${pathString} to be set in the environment"))
@@ -676,7 +676,7 @@ object ConfigProvider {
       ): ZIO[Any, Error, Chunk[Chunk[A]]] =
         (for {
           possibleNil <- flat.load(prefix, Config.Text, split = false)
-          result <- if (possibleNil.headOption.exists(string => string.toLowerCase().trim == "<nil>"))
+          result      <- if (possibleNil.headOption.exists(string => string.toLowerCase().trim == "<nil>"))
                       ZIO.succeed(Chunk(Chunk.empty))
                     else continue
         } yield result).orElse(continue)
@@ -703,7 +703,7 @@ object ConfigProvider {
           case Sequence(config) =>
             for {
               patchedPrefix <- ZIO.fromEither(flat.patch(prefix))
-              indices <- flat
+              indices       <- flat
                            .enumerateChildren(patchedPrefix)
                            .flatMap(set => indicesFrom(set))
 
@@ -745,7 +745,7 @@ object ConfigProvider {
             for {
               patchedPrefix <- ZIO.fromEither(flat.patch(prefix))
               keys          <- flat.enumerateChildren(patchedPrefix)
-              values <- ZIO.foreach(Chunk.fromIterable(keys))(key =>
+              values        <- ZIO.foreach(Chunk.fromIterable(keys))(key =>
                           loop(prefix ++ Chunk(key), valueConfig, split, patchTail = false)
                         )
             } yield
@@ -755,8 +755,8 @@ object ConfigProvider {
           case zipped: Zipped[leftType, rightType, c] =>
             import zipped.{left, right, zippable}
             for {
-              l <- loop(prefix, left, split).either
-              r <- loop(prefix, right, split).either
+              l      <- loop(prefix, left, split).either
+              r      <- loop(prefix, right, split).either
               result <- (l, r) match {
                           case (Left(e1), Left(e2)) => ZIO.fail(e1 && e2)
                           case (Left(e1), Right(_)) => ZIO.fail(e1)
@@ -798,7 +798,7 @@ object ConfigProvider {
             for {
               prefix <- if (patchTail) ZIO.fromEither(flat.patch(prefix))
                         else ZIO.fromEither(flat.patch(prefix.dropRight(1))).map(_ :+ prefix.last)
-              vs <- flat.load(prefix, primitive, split)
+              vs     <- flat.load(prefix, primitive, split)
               result <- if (vs.isEmpty)
                           ZIO.fail(primitive.missingError(prefix.lastOption.getOrElse("<n/a>")))
                         else ZIO.succeed(vs)
@@ -809,7 +809,7 @@ object ConfigProvider {
         loop(Chunk.empty, config, false).flatMap { chunk =>
           chunk.headOption match {
             case Some(a) => ZIO.succeed(a)
-            case _ =>
+            case _       =>
               ZIO.fail(Config.Error.MissingData(Chunk.empty, s"Expected a single value having structure ${config}"))
           }
         }
@@ -891,7 +891,7 @@ object ConfigProvider {
 
         for {
           valueOpt <- zio.System.property(pathString).mapError(sourceUnavailable(path))
-          value <- ZIO
+          value    <- ZIO
                      .fromOption(valueOpt)
                      .mapError(_ => Config.Error.MissingData(path, s"Expected ${pathString} to be set in properties"))
           results <- Flat.util.parsePrimitive(value, path, name, primitive, escapedSeqDelim, split)
@@ -963,7 +963,7 @@ object ConfigProvider {
     map.map { case (pathString, value) =>
       val keyWithIndex =
         for {
-          key <- unmakePathString(pathString)
+          key          <- unmakePathString(pathString)
           keyWithIndex <-
             splitIndexFrom(key) match {
               case Some((key, index)) => Chunk(key, BracketedIndex(index))

@@ -30,7 +30,7 @@ $label(
             .filter(_._2.hasDiff)
             .map {
               case (Some(label), Different(_, _, Some(custom))) => dim(label + " = ") + indent(custom, label.length + 3)
-              case (Some(label), diff) =>
+              case (Some(label), diff)                          =>
                 val color = diff match {
                   case Removed(_) => scala.Console.RED
                   case Added(_)   => scala.Console.GREEN

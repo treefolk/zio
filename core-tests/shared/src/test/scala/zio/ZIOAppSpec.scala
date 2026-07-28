@@ -72,7 +72,7 @@ object ZIOAppSpec extends ZIOBaseSpec {
       for {
         ref1 <- Ref.make(false)
         ref2 <- Ref.make(false)
-        app = new ZIOAppDefault {
+        app   = new ZIOAppDefault {
                 override val bootstrap = ZLayer.scoped(ZIO.acquireRelease(ref1.set(true))(_ => ref1.set(false)))
                 val run                = ZIO.acquireRelease(ZIO.unit)(_ => ref1.get.flatMap(ref2.set))
               }
